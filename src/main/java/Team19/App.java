@@ -14,5 +14,15 @@ public class App extends Jooby {
   public static void main(final String[] args) {
     run(App::new, args);
   }
+      GraphADT graph = new GraphADT() {
+        @Override
+        public int pathLengthBetweenStartAndEndNode() {
+          return 0;
+        }
 
+        @Override
+        public boolean importGraph(String input) {
+          return false;
+        }
+      };
 }
