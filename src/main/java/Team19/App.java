@@ -7,22 +7,13 @@ import org.jooby.Jooby;
  */
 public class App extends Jooby {
 
-  {
-    get("/", () -> "Hello World!");
-  }
+    {
+        get("/", () -> "Hello World!");
+    }
 
-  public static void main(final String[] args) {
-    run(App::new, args);
-  }
-      GraphADT graph = new GraphADT() {
-        @Override
-        public int pathLengthBetweenStartAndEndNode() {
-          return 0;
-        }
+    public static void main(final String[] args) {
+        run(App::new, args);
+    }
 
-        @Override
-        public boolean importGraph(String input) {
-          return false;
-        }
-      };
+    GraphADT graph = new Graph();
 }
