@@ -1,16 +1,20 @@
 package Team19;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 abstract class GraphADT {
 
-    private List<Node> nodes;
+    protected List<Node> nodes;
     private String startNode;
     private String endNode;
     private int correctLength;
 
     public GraphADT(){
-
+        this(new ArrayList<>());
     }
     public GraphADT(List<Node> node){
           this.nodes = node; // Not sure if this is how we will load the graph tho.
@@ -46,7 +50,26 @@ abstract class GraphADT {
 
     public abstract int pathLengthBetweenStartAndEndNode();
 
-    public abstract boolean importGraph(String input);
+    public abstract int parseInput(ArrayList<String> data);
+
+    public boolean importGraph(String input){
+        try {
+            File myObj = new File(input);
+            Scanner myReader = new Scanner(myObj);
+            ArrayList<String> data = new ArrayList<>();
+            while (myReader.hasNextLine()) {
+                data.add(myReader.nextLine());
+            }
+            myReader.close();
+            //System.out.println(data.toString());
+            this.parseInput(data);
+            return true;
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return false;
+    };
 
 
 }
