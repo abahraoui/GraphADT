@@ -21,8 +21,8 @@ public class Node {
         edges.put(destinationNodeKey, weight);
     }
 
-    public int getEdgeWeight(String key) {
-        return edges.get(key);
+    public int getEdgeWeight(String otherEdgeKey) {
+        return edges.get(otherEdgeKey);
     }
 
     public Map<String, Integer> getEdges() {
@@ -33,6 +33,4 @@ public class Node {
     public String toString() {
         return "Node: key: " + this.getKey() + ", edges: " + getEdges().toString();
     }
-
-
 }

@@ -13,46 +13,45 @@ abstract class GraphADT {
     private String endNode;
     private int correctLength;
 
-    public GraphADT(){
+    public GraphADT() {
         this(new ArrayList<>());
     }
-    public GraphADT(List<Node> node){
-          this.nodes = node; // Not sure if this is how we will load the graph tho.
 
+    public GraphADT(List<Node> node) {
+        this.nodes = node; // Not sure if this is how we will load the graph tho.
     }
-    public GraphADT(List<Node> node,String userStartNode, String userEndNode){
+
+    public GraphADT(List<Node> node, String userStartNode, String userEndNode) {
         this.nodes = node;
         this.startNode = userStartNode;
         this.endNode = userEndNode;
     }
 
-    public void setStartNode(String startingNode){
+    public void setStartNode(String startingNode) {
         this.startNode = startingNode;
     }
 
-    public String getStartNode(){
+    public String getStartNode() {
         return startNode;
     }
 
-    public void setEndNode(String endingNode){
+    public void setEndNode(String endingNode) {
         this.endNode = endingNode;
     }
 
-    public String getEndNode(){
+    public String getEndNode() {
         return endNode;
     }
 
-    public boolean checkGuess(int playerGuess){
-        boolean success = false; //For future implementation.
-
-        return success;
+    public boolean checkGuess(int playerGuess) {
+        return correctLength == playerGuess;
     }
 
     public abstract int pathLengthBetweenStartAndEndNode();
 
-    public abstract int parseInput(ArrayList<String> data);
+    public abstract boolean parseInput(ArrayList<String> inputLines);
 
-    public boolean importGraph(String input){
+    public boolean importGraph(String input) {
         try {
             File myObj = new File(input);
             Scanner myReader = new Scanner(myObj);
@@ -62,14 +61,15 @@ abstract class GraphADT {
             }
             myReader.close();
             //System.out.println(data.toString());
-            this.parseInput(data);
-            return true;
+            return this.parseInput(data);
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
         return false;
-    };
+    }
+
+    ;
 
 
 }
