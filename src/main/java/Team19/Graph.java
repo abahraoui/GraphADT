@@ -27,22 +27,34 @@ public class Graph extends GraphADT {
                     //1. check if node already exists
                     //   if it does then add this edge to the node
                     //   else create the node, add it to the nodes list, add the edge to the node
-                    //Node node = this.nodes.stream().filter(n -> thisNodeKey.equals(n.getKey())).findFirst().orElse(null);
-
-                    Node node = null;
+                    //Node node = this.nodes.stream().filter(n -> thisNodeKey.equals(n.getKey())).findFirst()
+.      orElse(null);
+                    //Node node2 = this.nodes.stream().filter(n -> thatNodeKey.equals(n.getKey())).findFirst().orElse(null);
+    Node node = null;
+    Node node2 = null;
+                    
                     for (Node currentNode:this.nodes){
                         if (currentNode.getKey().equals(thisNodeKey)) {
                             node = currentNode;
-                            break;
+                            node.addEdge(thatNodeKey, edgeWeight);
+                        }
+                        if (currentNode.getKey().equals(thatNodeKey)) {
+                            node2 = currentNode;
+                            node2.addEdge(thisNodeKey, edgeWeight);
                         }
                     }
-
-
+                    
                     if (node == null) {
                         node = new Node(thisNodeKey);
                         this.nodes.add(node);
+                        node.addEdge(thatNodeKey, edgeWeight);
                     }
-                    node.addEdge(thatNodeKey, edgeWeight);
+                    if (node2 == null) { 
+                        node2 = new Node(thatNodeKey);
+                        this.nodes.add(node2);
+                        node2.addEdge(thisNodeKey, edgeWeight);
+                    }
+                    
                 }
             });
             System.out.println(this.nodes.size());
