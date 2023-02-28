@@ -1,13 +1,57 @@
 package Team19;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Graph extends GraphADT {
     @Override
-    public int pathLengthBetweenStartAndEndNode() {
-        return 0;
+    public double findShortestPath() {
+        if (this.getStartNodeKey() == null)
+            throw new Error("No start node is set");
+        if (this.getEndNodeKey() == null)
+            throw new Error("No start node is set");
+
+        Map<String, Double> distances = new HashMap();
+        Map<String, Boolean> sptSet = new HashMap();
+        this.nodes.forEach((node) -> {
+            distances.put(node.getKey(),
+                    node.getKey().equals(this.getStartNodeKey()) ? 0 : Double.POSITIVE_INFINITY);
+            sptSet.put(node.getKey(), false);
+        });
+
+        for (int count = 0; count < this.nodes.size(); count++) {
+            String minDistanceEntryKey = minDistanceEntry(distances, sptSet);
+            Node outerNode = this.nodes.stream().filter(n -> n.getKey().equals(minDistanceEntryKey))
+                    .findFirst().orElse(null);
+            sptSet.put(outerNode.getKey(), true);
+
+            this.nodes.forEach(innerNode -> {
+                Integer edgeWeight = outerNode.getEdges().get(innerNode.getKey());
+                Double outerNodeDistance = distances.get(outerNode.getKey());
+                Double innerNodeDistance = distances.get(innerNode.getKey());
+                if (!sptSet.get(innerNode.getKey()) &&
+                        (edgeWeight != null && edgeWeight != 0) &&
+                        outerNodeDistance != Double.POSITIVE_INFINITY &&
+                        (outerNodeDistance + edgeWeight < innerNodeDistance)
+                ) {
+                    distances.put(innerNode.getKey(), outerNodeDistance + edgeWeight);
+                }
+            });
+        }
+
+        return distances.get(this.getEndNodeKey());
+    }
+
+    private String minDistanceEntry(Map<String, Double> distances, Map<String, Boolean> sptSet) {
+        Entry<String, Double> min = null;
+        for (Entry<String, Double> entry : distances.entrySet())
+            if ((min == null || min.getValue() > entry.getValue()) && !sptSet.get(entry.getKey()))
+                min = entry;
+        return min == null ? null : min.getKey();
     }
 
     //0 36 {'weight': 9}
@@ -22,7 +66,6 @@ public class Graph extends GraphADT {
                     String thisNodeKey = matcher.group(1);
                     String thatNodeKey = matcher.group(2);
                     int edgeWeight = Integer.parseInt(matcher.group(3));
-                    System.out.println(line + " " + thisNodeKey + " " + thatNodeKey + " " + edgeWeight);
 
                     Node node = null;
                     Node node2 = null;
@@ -51,10 +94,8 @@ public class Graph extends GraphADT {
 
                 }
             });
-            System.out.println(this.nodes.size());
-            System.out.println(this.nodes.get(29));
-        } catch (Error bingchilling) {
-            System.err.println(bingchilling.getCause());
+        } catch (Error error) {
+            System.err.println(error.getCause());
             return false;
         }
 

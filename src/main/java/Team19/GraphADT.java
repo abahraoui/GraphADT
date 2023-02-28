@@ -9,9 +9,9 @@ import java.util.Scanner;
 abstract class GraphADT {
 
     protected List<Node> nodes;
-    private String startNode;
-    private String endNode;
-    private int correctLength;
+    private String startNodeKey;
+    private String endNodeKey;
+    public double correctLength;
 
     public GraphADT() {
         this(new ArrayList<>());
@@ -21,33 +21,40 @@ abstract class GraphADT {
         this.nodes = node; // Not sure if this is how we will load the graph tho.
     }
 
-    public GraphADT(List<Node> node, String userStartNode, String userEndNode) {
+    public GraphADT(List<Node> node, String userStartNodeKey, String userEndNodeKey) {
         this.nodes = node;
-        this.startNode = userStartNode;
-        this.endNode = userEndNode;
+        this.startNodeKey = userStartNodeKey;
+        this.endNodeKey = userEndNodeKey;
     }
 
-    public void setStartNode(String startingNode) {
-        this.startNode = startingNode;
+    public void setStartNodeKey(String startingNode) {
+        this.startNodeKey = startingNode;
+        updateCorrectLength();
     }
 
-    public String getStartNode() {
-        return startNode;
+    public String getStartNodeKey() {
+        return startNodeKey;
     }
 
-    public void setEndNode(String endingNode) {
-        this.endNode = endingNode;
+    public void setEndNodeKey(String endingNode) {
+        this.endNodeKey = endingNode;
+        updateCorrectLength();
     }
 
-    public String getEndNode() {
-        return endNode;
+    public String getEndNodeKey() {
+        return endNodeKey;
     }
 
     public boolean checkGuess(int playerGuess) {
         return correctLength == playerGuess;
     }
 
-    public abstract int pathLengthBetweenStartAndEndNode();
+    private void updateCorrectLength() {
+        if (this.startNodeKey != null && this.endNodeKey != null)
+            this.correctLength = this.findShortestPath();
+    }
+
+    public abstract double findShortestPath();
 
     public abstract boolean parseInput(ArrayList<String> inputLines);
 
@@ -68,8 +75,4 @@ abstract class GraphADT {
         }
         return false;
     }
-
-    ;
-
-
 }
