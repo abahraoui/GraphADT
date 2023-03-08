@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 abstract class GraphADT {
@@ -74,5 +75,17 @@ abstract class GraphADT {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public ArrayList<EdgeDTO> getEdges() {
+        ArrayList<EdgeDTO> edges = new ArrayList<>();
+        this.nodes.forEach(node -> {
+            Map<String, Integer> currentEdges = node.getEdges();
+            currentEdges.forEach((currentTo, currentWeight) -> {
+                EdgeDTO currentEdge = new EdgeDTO(node.getKey(), currentTo,currentWeight);
+                if (!edges.contains(currentEdge)) edges.add(currentEdge);
+            });
+        });
+        return edges;
     }
 }
