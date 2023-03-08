@@ -1,11 +1,5 @@
 import { useState, useLayoutEffect, useRef } from "react";
-import {
-  Network,
-  Options,
-  Data,
-  Edge,
-  Node
-} from "vis-network/standalone/esm/vis-network";
+import { Network, Options, Data, Edge, Node } from "vis-network";
 
 export interface UseVisNetworkOptions {
   options: Options;
@@ -31,6 +25,6 @@ export default (props: UseVisNetworkOptions) => {
 
   return {
     network,
-    ref
+    ref,
   };
 };

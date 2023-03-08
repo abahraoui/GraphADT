@@ -1,12 +1,26 @@
+import { useEffect, useState } from "react";
 import { Edge, Node } from "vis-network";
-import { edges } from "../edges";
-import useVisNetwork from "../useVisNetwork";
+import GraphService from "../GraphService";
+import { IGraphEdge } from "../IGraphModel";
+import GraphInner from "./GraphInner";
 
 export default function Graph() {
+  const [edges, setEdges] = useState<IGraphEdge[]>([]);
+
+  useEffect(() => {
+    if (edges.length === 0) load();
+  }, []);
+
+  const load = async () => {
+    setEdges(await GraphService.getEdges());
+  };
+
   const edgeList: Edge[] = edges.map((e, i) => ({
     id: i,
     ...e,
     label: `${e.weight}`,
+    length: e.weight * 20,
+    color: "#3481ea",
   }));
 
   const nodeList: Node[] = [
@@ -19,29 +33,29 @@ export default function Graph() {
     },
   }));
 
-  const { ref, network } = useVisNetwork({
-    options: {},
-    edges: edgeList,
-    nodes: nodeList,
-  });
+  const shuffled = Array(nodeList.length)
+    .fill(null)
+    .map((_v, i) => i)
+    .sort(() => 0.5 - Math.random());
 
-  const handleClick = () => {
-    if (!network) return;
+  const [startNodeIndex, endNodeIndex] = shuffled.slice(0, 2);
+  if (nodeList.length != 0) {
+    nodeList[startNodeIndex].color = {
+      background: "lightgreen",
+      highlight: "lightgreen",
+      hover: "lightgreen",
+      border: "green",
+    };
 
-    network.focus(5);
-  };
+    nodeList[endNodeIndex].color = {
+      background: "#ff8484",
+      highlight: "#ff8484",
+      hover: "#ff8484",
+      border: "red",
+    };
+  }
 
-  // useEffect(() => {
-  //   if (!network) return;
+  if (edges.length === 0) return <>Loading...</>;
 
-  //   network.once("beforeDrawing", () => {
-  //     network.focus(5);
-  //   });
-  //   network.setSelection({
-  //     edges: [1, 2, 3, 4, 5],
-  //     nodes: [1, 2, 3, 4, 5]
-  //   });
-  // }, [network]);
-
-  return <div className="w-full flex-1" ref={ref} />;
+  return <GraphInner nodes={nodeList} edges={edgeList} />;
 }
