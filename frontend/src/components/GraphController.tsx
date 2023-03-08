@@ -57,5 +57,11 @@ export default function Graph() {
 
   if (edges.length === 0) return <>Loading...</>;
 
-  return <GraphInner nodes={nodeList} edges={edgeList} />;
+  return (
+    <GraphInner
+      nodes={nodeList}
+      edges={edgeList}
+      height={(innerHeight * 3) / 4}
+    />
+  );
 }
