@@ -1,4 +1,4 @@
-import Graph from "./components/Graph";
+import Graph from "./components/GraphController";
 
 export default function App() {
   return (

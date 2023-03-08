@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Edge, Node } from "vis-network";
 import GraphService from "../GraphService";
 import { IGraphEdge } from "../IGraphModel";
-import GraphInner from "./GraphInner";
+import GraphInner from "./GraphView";
 
 export default function Graph() {
   const [edges, setEdges] = useState<IGraphEdge[]>([]);
