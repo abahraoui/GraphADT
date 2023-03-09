@@ -14,6 +14,8 @@ public class App extends Jooby {
         use("*", new CorsHandler());
         get("/", () -> "Hello World!");
         get("/getEdges", () -> new Gson().toJson(graph.getEdges()));
+        get("/checkGuess", req -> graph.checkGuess(Integer.parseInt(req.param("guess").value())));
+
     }
 
     public static void main(final String[] args) {
