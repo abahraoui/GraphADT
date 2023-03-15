@@ -1,7 +1,9 @@
 package Team19;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -15,8 +17,10 @@ public class Graph extends GraphADT {
         if (this.getEndNodeKey() == null)
             throw new Error("No start node is set");
 
-        Map<String, Double> distances = new HashMap();
-        Map<String, Boolean> sptSet = new HashMap();
+        Map<String, Double> distances = new HashMap<>();
+        Map<String, Boolean> sptSet = new HashMap<>();
+        Map<String, String> shortestPrevNode = new HashMap<>();
+
         this.nodes.forEach((node) -> {
             distances.put(node.getKey(),
                     node.getKey().equals(this.getStartNodeKey()) ? 0 : Double.POSITIVE_INFINITY);
@@ -36,13 +40,46 @@ public class Graph extends GraphADT {
                 if (!sptSet.get(innerNode.getKey()) &&
                         (edgeWeight != null && edgeWeight != 0) &&
                         outerNodeDistance != Double.POSITIVE_INFINITY &&
-                        (outerNodeDistance + edgeWeight < innerNodeDistance)
-                ) {
+                        (outerNodeDistance + edgeWeight < innerNodeDistance)) {
                     distances.put(innerNode.getKey(), outerNodeDistance + edgeWeight);
+                    shortestPrevNode.put(innerNode.getKey(), outerNode.getKey());
                 }
             });
         }
+        System.out.print("shortestPrevNode ");
+        System.out.println(shortestPrevNode);
 
+        Map<String, List<String>> pathOfAll = new HashMap<>();
+        this.nodes.forEach(node -> {
+            if (node.getKey().equals("0")) {
+                pathOfAll.put(node.getKey(), Collections.singletonList(node.getKey()));
+                return;
+            }
+            ArrayList<String> pathToThisNode = new ArrayList<>();
+            pathToThisNode.add(node.getKey());
+            String tempEnd = shortestPrevNode.get(node.getKey());
+            while (!(tempEnd.equals(this.getStartNodeKey()))) {
+                pathToThisNode.add(tempEnd);
+                tempEnd = shortestPrevNode.get(tempEnd);
+            }
+            pathToThisNode.add(tempEnd);
+            pathOfAll.put(node.getKey(), pathToThisNode);
+        });
+        System.out.println();
+        System.out.println();
+        System.out.print("pathOfAll ");
+        System.out.println(pathOfAll);
+        System.out.println();
+        System.out.println();
+
+        String tempEnd = shortestPrevNode.get(this.getEndNodeKey());
+        this.correctPath.add(this.getEndNodeKey());
+        while (!(tempEnd.equals(this.getStartNodeKey()))) {
+            this.correctPath.add(tempEnd);
+            tempEnd = shortestPrevNode.get(tempEnd);
+        }
+        this.correctPath.add(tempEnd);
+        System.out.println(this.correctPath);
         return distances.get(this.getEndNodeKey());
     }
 
@@ -54,7 +91,7 @@ public class Graph extends GraphADT {
         return min == null ? null : min.getKey();
     }
 
-    //0 36 {'weight': 9}
+    // 0 36 {'weight': 9}
     @Override
     public boolean parseInput(ArrayList<String> lines) {
         final String parseRegex = "(\\d*) (\\d*) \\{'weight': (\\d*)}";
