@@ -13,6 +13,7 @@ export default function Graph() {
 
   const load = async () => {
     setEdges(await GraphService.getEdges());
+    console.log(await GraphService.checkGuess(5));
   };
 
   const edgeList: Edge[] = edges.map((e, i) => ({
