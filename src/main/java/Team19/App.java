@@ -21,10 +21,13 @@ public class App extends Jooby {
                 String endNode = req.param("endNode").value();
                 graph.setStartNodeKey(startNode);
                 graph.setEndNodeKey(endNode);
+                System.out.println(graph.getStartNodeKey());
                 System.out.println("Created Not Random graph");
             }else{
-                //graph.setRandomStartNode();
-               // graph.setRandomEndNode();
+                graph.setRandomStartNode();
+                graph.setRandomEndNode();
+                System.out.println(graph.getStartNodeKey());
+                System.out.println("Created Random graph");
             }
 
 

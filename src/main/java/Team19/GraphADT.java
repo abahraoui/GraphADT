@@ -33,8 +33,8 @@ abstract class GraphADT {
         updateCorrectLength();
     }
 
-    public void setRandomStartNode() { 
-    	this.startNode = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size() - 0 + 1) + 0));
+    public void setRandomStartNode() {
+    	this.startNodeKey = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size() + 1) + 0));
     	updateCorrectLength();
     }
 
@@ -48,8 +48,8 @@ abstract class GraphADT {
     }
 
     public void setRandomEndNode() {
-    	this.endNode = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size() - 0 + 1) + 0));
-    	if(this.endNode == this.startNode) {
+    	this.endNodeKey = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size() + 1) + 0));
+    	if(this.endNodeKey.equals(this.startNodeKey)) {
     		this.setRandomEndNode();
     	}
     	updateCorrectLength();
