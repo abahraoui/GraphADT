@@ -33,5 +33,13 @@ export default {
             .then((answer) => {return answer.toString()})
     },
 
+    createGraph: async (isRandom: boolean, startNode: String, endNode: String): Promise<Response> => {
+        return fetch(`${API_URL}/createGraph?isRandom=${isRandom}&startNode=${startNode}&endNode=${endNode}`).then((res)=>{
+            if (res.ok) return res.json();
+            throw Error("Unexpected error happened.");
+        })
+            .then((answer) => {return answer.toString()})
+    },
+
 
     };

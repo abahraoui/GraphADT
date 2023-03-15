@@ -12,6 +12,7 @@ export default function Graph() {
   }, []);
 
   const load = async () => {
+    console.log(await GraphService.createGraph(false, "0", "10"))
     setEdges(await GraphService.getEdges());
     console.log(await GraphService.checkGuess(5));
   };
