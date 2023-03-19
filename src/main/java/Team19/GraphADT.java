@@ -2,21 +2,26 @@ package Team19;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 abstract class GraphADT {
+    enum Level {
+        EASY,
+        MEDIUM,
+        HARD
+    }
 
     private ArrayList<Node> nodes;
     private String startNodeKey;
+
+    public Level difficulty;
+
     private String endNodeKey;
     public double correctLength;
-    public ArrayList<String> correctPath = new ArrayList<String>();
+    public List<String> correctPath;
 
-    protected Map<String, Double> distances = new HashMap<>();
-    protected Map<String, ArrayList<String>> pathsOfAll = new HashMap<>();
+    protected Map<String, Double> distances;
+    protected Map<String, ArrayList<String>> pathsOfAll;
 
 
     public GraphADT() {
@@ -44,9 +49,9 @@ abstract class GraphADT {
         updateCorrectLength();
     }
 
-    public void setRandomStartNode() { 
-    	this.startNodeKey = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size() - 0 + 1) + 0));
-    	updateCorrectLength();
+    public void setRandomStartNode() {
+        this.startNodeKey = Integer.toString((int) Math.floor(Math.random() * (this.nodes.size() + 1) + 0));
+        updateCorrectLength();
     }
 
     public String getStartNodeKey() {
@@ -58,12 +63,29 @@ abstract class GraphADT {
         updateCorrectLength();
     }
 
-    public void setRandomEndNode() {
-    	this.endNodeKey = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size() - 0 + 1) + 0));
-    	if(this.endNodeKey == this.startNodeKey) {
-    		this.setRandomEndNode();
-    	}
-    	updateCorrectLength();
+    public void setRandomEndNode(String diff) {
+        switch (diff) {
+            case "easy":
+                difficulty = Level.EASY;
+                break;
+            case "medium":
+                difficulty = Level.MEDIUM;
+                break;
+            default:
+                difficulty = Level.HARD;
+                break;
+        }
+
+
+        findShortestPathBasedOnDiff(difficulty);
+/*        this.endNodeKey = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size()+ 1) + 0));
+        if(this.endNodeKey == this.startNodeKey) {
+            this.setRandomEndNode();
+        }*/
+        updateCorrectLength();
+        System.out.println(correctPath);
+        System.out.println(correctLength);
+
     }
 
     public String getEndNodeKey() {
@@ -109,7 +131,7 @@ abstract class GraphADT {
         this.nodes.forEach(node -> {
             Map<String, Integer> currentEdges = node.getEdges();
             currentEdges.forEach((currentTo, currentWeight) -> {
-                EdgeDTO currentEdge = new EdgeDTO(node.getKey(), currentTo,currentWeight);
+                EdgeDTO currentEdge = new EdgeDTO(node.getKey(), currentTo, currentWeight);
                 if (!edges.contains(currentEdge)) edges.add(currentEdge);
             });
         });

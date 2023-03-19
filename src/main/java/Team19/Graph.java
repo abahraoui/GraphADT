@@ -29,8 +29,6 @@ public class Graph extends GraphADT {
         if (this.getStartNodeKey() == null)
             throw new NullPointerException("No start node is set");
 
-        Map<String, Double> distances = new HashMap<>();
-        Map<String, Boolean> sptSet = new HashMap<>();
         Map<String, String> shortestPrevNode = new HashMap<>();
         Map<String, Boolean> sptSet = new HashMap<>();
 
@@ -48,19 +46,17 @@ public class Graph extends GraphADT {
 
             this.getNodes().forEach(innerNode -> {
                 Integer edgeWeight = outerNode.getEdges().get(innerNode.getKey());
-                Double outerNodeDistance = distances.get(outerNode.getKey());
-                Double innerNodeDistance = distances.get(innerNode.getKey());
+                Double outerNodeDistance = this.distances.get(outerNode.getKey());
+                Double innerNodeDistance = this.distances.get(innerNode.getKey());
                 if (!sptSet.get(innerNode.getKey()) &&
                         (edgeWeight != null && edgeWeight != 0) &&
                         outerNodeDistance != Double.POSITIVE_INFINITY &&
                         (outerNodeDistance + edgeWeight < innerNodeDistance)) {
-                    distances.put(innerNode.getKey(), outerNodeDistance + edgeWeight);
+                    this.distances.put(innerNode.getKey(), outerNodeDistance + edgeWeight);
                     shortestPrevNode.put(innerNode.getKey(), outerNode.getKey());
                 }
             });
         }
-        System.out.print("shortestPrevNode ");
-        System.out.println(shortestPrevNode);
 
         Map<String, ArrayList<String>> pathOfAll = new HashMap<>();
         this.getNodes().forEach(node -> {
@@ -76,9 +72,11 @@ public class Graph extends GraphADT {
             ArrayList<String> pathToThisNode = new ArrayList<>();
             pathToThisNode.add(node.getKey());
             String tempEnd = shortestPrevNode.get(node.getKey());
-            while (!(tempEnd.equals(this.getStartNodeKey()))) {
-                pathToThisNode.add(tempEnd);
-                tempEnd = shortestPrevNode.get(tempEnd);
+            if (tempEnd != null) {
+                while (!(tempEnd.equals(this.getStartNodeKey()))) {
+                    pathToThisNode.add(tempEnd);
+                    tempEnd = shortestPrevNode.get(tempEnd);
+                }
             }
             pathToThisNode.add(tempEnd);
             pathOfAll.put(node.getKey(), pathToThisNode);
