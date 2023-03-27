@@ -1,9 +1,7 @@
 package Team19;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -13,14 +11,12 @@ public class Graph extends GraphADT {
 
     static final Integer MINPATHLENGTH = 2; // Minimum length of a path
 
-
-    public Map<String, List<String>> findShortestPath() {
+    public void findShortestPath() {
         if (this.getStartNodeKey() == null)
             throw new Error("No start node is set");
 
         Map<String, String> shortestPrevNode = new HashMap<>();
         Map<String, Boolean> sptSet = new HashMap<>();
-
 
         this.nodes.forEach((node) -> {
             this.distances.put(node.getKey(),
@@ -48,10 +44,15 @@ public class Graph extends GraphADT {
             });
         }
 
-        Map<String, List<String>> pathOfAll = new HashMap<>();
+        Map<String, ArrayList<String>> pathOfAll = new HashMap<>();
         this.nodes.forEach(node -> {
             if (node.getKey().equals(getStartNodeKey())) {
-                pathOfAll.put(node.getKey(), Collections.singletonList(node.getKey()));
+                pathOfAll.put(node.getKey(),
+                        new ArrayList<String>() {
+                            {
+                                add(node.getKey());
+                            }
+                        });
                 return;
             }
             ArrayList<String> pathToThisNode = new ArrayList<>();
@@ -67,55 +68,52 @@ public class Graph extends GraphADT {
             pathOfAll.put(node.getKey(), pathToThisNode);
         });
 
-
-        return pathOfAll;
+        this.pathsOfAll = pathOfAll;
     }
 
     public void findShortestPathBasedOnDiff(Level Difficulty) {
-        Map<String, List<String>> pathOfAll = findShortestPath();
+        findShortestPath();
         Integer max = 2;
 
-        for (List<String> list : pathOfAll.values()){
+        for (ArrayList<String> list : this.pathsOfAll.values()) {
             if (list.size() > max)
                 max = list.size();
         }
-        System.out.println(max);
+        System.out.println("Path with max hops: " + max);
 
-        Integer skillDifference = (max-MINPATHLENGTH) % 3;
+        Integer skillDifference = (max - MINPATHLENGTH) % 3;
 
-        Integer skillDifferenceRandomized = (int)(Math.random() * skillDifference);
+        Integer skillDifferenceRandomized = (int) (Math.random() * skillDifference);
 
         switch (Difficulty) {
             case EASY:
-                setEndNodeKey(pickEndNodeBasedOnDiff(MINPATHLENGTH+skillDifferenceRandomized, pathOfAll));
-
+                setEndNodeKey(pickEndNodeBasedOnDiff(MINPATHLENGTH + skillDifferenceRandomized));
                 break;
             case MEDIUM:
-                setEndNodeKey(pickEndNodeBasedOnDiff(skillDifference+MINPATHLENGTH+skillDifferenceRandomized, pathOfAll));
+                setEndNodeKey(pickEndNodeBasedOnDiff(skillDifference + MINPATHLENGTH + skillDifferenceRandomized));
                 break;
-
             case HARD:
-                setEndNodeKey(pickEndNodeBasedOnDiff((skillDifference*2)+MINPATHLENGTH+skillDifferenceRandomized, pathOfAll));
+                setEndNodeKey(
+                        pickEndNodeBasedOnDiff((skillDifference * 2) + MINPATHLENGTH + skillDifferenceRandomized));
                 break;
         }
     }
 
-    private String pickEndNodeBasedOnDiff(Integer skillIssue, Map<String, List<String>> bigMap){
+    private String pickEndNodeBasedOnDiff(int skillIssue) {
         String randomlyPickedEndNote = null;
-        for (Entry<String, List<String>> e : bigMap.entrySet()){
-            int len = e.getValue().size();
-            if (len == (skillIssue)){
-                if(randomlyPickedEndNote == null){
+        for (Entry<String, ArrayList<String>> e : this.pathsOfAll.entrySet()) {
+            if (e.getValue().size() == skillIssue) {
+                if (randomlyPickedEndNote == null) {
                     randomlyPickedEndNote = e.getKey();
-                }else{
-                    if(Math.random() > 0.5){
+                } else {
+                    if (Math.random() > 0.5) {
                         randomlyPickedEndNote = e.getKey();
                     }
                 }
             }
         }
 
-        this.correctPath = bigMap.get(randomlyPickedEndNote);
+        this.correctPath = this.pathsOfAll.get(randomlyPickedEndNote);
 
         return randomlyPickedEndNote;
     }

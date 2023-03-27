@@ -18,12 +18,9 @@ public class App extends Jooby {
         get("/createGraph", req -> {
             String startNode = req.param("startNode").isSet() ? req.param("startNode").value() : null;
             String endNode = req.param("endNode").isSet() ? req.param("endNode").value() : null;
-            String diff = req.param("diff").isSet() ? req.param("diff").value() : "easy";
+            String diff = req.param("diff").isSet() ? req.param("diff").value().toLowerCase() : "easy";
             if (startNode == null) {
                 graph.setRandomStartNode();
-                graph.setRandomEndNode(diff);
-            } else if (endNode == null) {
-                graph.setStartNodeKey(startNode);
                 graph.setRandomEndNode(diff);
             } else {
                 graph.setStartNodeKey(startNode);
@@ -40,12 +37,13 @@ public class App extends Jooby {
                 edgesJson.add(edgeJson);
             });
             JsonObject response = new JsonObject();
-            response.addProperty("startNodeKey", 3);
-            response.addProperty("endNodeKey", 3);
+            response.addProperty("startNodeKey", graph.getStartNodeKey());
+            response.addProperty("endNodeKey",graph.getEndNodeKey());
             response.add("edges", edgesJson);
             return new Gson().toJson(response);
         });
         get("/checkGuess", req -> graph.checkGuess(Integer.parseInt(req.param("guess").value())));
+        get("/getEdges", () -> new Gson().toJson(graph.getEdges())); //TODO delete
 
     }
 
