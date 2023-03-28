@@ -30,7 +30,7 @@ abstract class GraphADT {
     }
 
     public GraphADT(List<Node> node) {
-        this.nodes = node; // Not sure if this is how we will load the graph tho.
+        this.nodes = node;
         this.difficulty = Level.EASY;
     }
 
@@ -38,6 +38,7 @@ abstract class GraphADT {
         this.nodes = node;
         this.startNodeKey = userStartNodeKey;
         this.endNodeKey = userEndNodeKey;
+        updateCorrectLength();
     }
 
     public void setStartNodeKey(String startingNode) {

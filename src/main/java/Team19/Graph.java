@@ -13,7 +13,7 @@ public class Graph extends GraphADT {
 
     public void findShortestPath() {
         if (this.getStartNodeKey() == null)
-            throw new Error("No start node is set");
+            throw new NullPointerException("No start node is set");
 
         Map<String, String> shortestPrevNode = new HashMap<>();
         Map<String, Boolean> sptSet = new HashMap<>();
@@ -166,9 +166,8 @@ public class Graph extends GraphADT {
 
                 }
             });
-        } catch (Error error) {
-            System.err.println(error.getCause());
-            return false;
+        } catch (NullPointerException e) {
+            throw new NullPointerException("An error occured because of your input");
         }
 
         return true;
