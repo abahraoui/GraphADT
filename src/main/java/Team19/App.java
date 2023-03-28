@@ -37,6 +37,8 @@ public class App extends Jooby {
                 edgesJson.add(edgeJson);
             });
             JsonObject response = new JsonObject();
+            Long startTime = System.nanoTime();
+            graph.userPlayTime = Math.toIntExact(startTime*(10^9));
             response.addProperty("startNodeKey", graph.getStartNodeKey());
             response.addProperty("endNodeKey",graph.getEndNodeKey());
             response.add("edges", edgesJson);

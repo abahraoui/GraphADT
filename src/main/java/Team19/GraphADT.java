@@ -21,12 +21,17 @@ abstract class GraphADT {
     public double correctLength;
     public List<String> correctPath = new ArrayList<String>();
 
+    public Integer amountOfGuesses = 0;
+
+    public Integer userPlayTime = 0;
+
     protected Map<String, Double> distances = new HashMap<>();
     protected Map<String, ArrayList<String>> pathsOfAll = new HashMap<>();
 
 
     public GraphADT() {
         this(new ArrayList<>());
+
     }
 
     public GraphADT(List<Node> node) {
@@ -88,8 +93,13 @@ abstract class GraphADT {
         return endNodeKey;
     }
 
-    public boolean checkGuess(int playerGuess) {
-        return correctLength == playerGuess;
+    public String checkGuess(int playerGuess) {
+        this.amountOfGuesses += 1;
+        if (playerGuess > correctLength)
+            return "LOWER";
+        if (playerGuess < correctLength)
+            return "HIGHER";
+        return "CORRECT";
     }
 
     private void updateCorrectLength() {
@@ -100,7 +110,10 @@ abstract class GraphADT {
     }
 
     public abstract void findShortestPath();
+
     public abstract void findShortestPathBasedOnDiff(Level difficulty);
+
+    public abstract Integer calculateScore(Level difficulty, Integer userPlayTime, Integer amountOfGuesses);
 
     public abstract boolean parseInput(ArrayList<String> inputLines);
 
