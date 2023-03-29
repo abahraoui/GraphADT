@@ -18,13 +18,12 @@ public class App extends Jooby {
         get("/createGraph", req -> {
             String startNode = req.param("startNode").isSet() ? req.param("startNode").value() : null;
             String endNode = req.param("endNode").isSet() ? req.param("endNode").value() : null;
-            String diff = req.param("diff").isSet() ? req.param("diff").value() : "easy";
             if (startNode == null) {
                 graph.setRandomStartNode();
-                graph.setRandomEndNode(diff);
+                graph.setRandomEndNode();
             } else if (endNode == null) {
                 graph.setStartNodeKey(startNode);
-                graph.setRandomEndNode(diff);
+                graph.setRandomEndNode();
             } else {
                 graph.setStartNodeKey(startNode);
                 graph.setEndNodeKey(endNode);
