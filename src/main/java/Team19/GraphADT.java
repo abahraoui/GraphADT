@@ -5,24 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 abstract class GraphADT {
-    enum Level {
-        EASY,
-        MEDIUM,
-        HARD
-    }
+    
 
     private ArrayList<Node> nodes;
-    private String startNodeKey;
-
-    public Level difficulty;
-
-    private String endNodeKey;
-    public double correctLength;
-    public List<String> correctPath;
-
-    public Integer amountOfGuesses = 0;
-
-    public Integer userPlayTime = 0;
 
     protected Map<String, Double> distances = new HashMap<>();
     protected Map<String, ArrayList<String>> pathsOfAll;
@@ -32,92 +17,16 @@ abstract class GraphADT {
         this(new ArrayList<>());
 
     }
-
+    
     public GraphADT(ArrayList<Node> node) {
         this.nodes = node;
-        this.difficulty = Level.EASY;
-    }
-
-    public GraphADT(ArrayList<Node> node, String userStartNodeKey, String userEndNodeKey) {
-        this.nodes = node;
-        this.startNodeKey = userStartNodeKey;
-        this.endNodeKey = userEndNodeKey;
-        updateCorrectLength();
     }
 
     public ArrayList<Node> getNodes(){
         return this.nodes;
     }
 
-    public void setStartNodeKey(String startingNode) {
-        this.startNodeKey = startingNode;
-        updateCorrectLength();
-    }
-
-    public void setRandomStartNode() {
-        this.startNodeKey = Integer.toString((int) Math.floor(Math.random() * (this.nodes.size() + 1) + 0));
-        updateCorrectLength();
-    }
-
-    public String getStartNodeKey() {
-        return startNodeKey;
-    }
-
-    public void setEndNodeKey(String endingNode) {
-        this.endNodeKey = endingNode;
-        updateCorrectLength();
-    }
-
-    public void setRandomEndNode(String diff) {
-        switch (diff) {
-            case "easy":
-                difficulty = Level.EASY;
-                break;
-            case "medium":
-                difficulty = Level.MEDIUM;
-                break;
-            default:
-                difficulty = Level.HARD;
-                break;
-        }
-
-
-        findShortestPathBasedOnDiff(difficulty);
-/*        this.endNodeKey = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size()+ 1) + 0));
-        if(this.endNodeKey == this.startNodeKey) {
-            this.setRandomEndNode();
-        }*/
-        updateCorrectLength();
-        System.out.println(correctPath);
-        System.out.println(correctLength);
-
-    }
-
-    public String getEndNodeKey() {
-        return endNodeKey;
-    }
-
-    public String checkGuess(int playerGuess) {
-        this.amountOfGuesses += 1;
-        if (playerGuess > correctLength)
-            return "LOWER";
-        if (playerGuess < correctLength)
-            return "HIGHER";
-        return "CORRECT";
-    }
-
-    private void updateCorrectLength() {
-        if (this.getStartNodeKey() != null && this.getEndNodeKey() != null) {
-            this.findShortestPath();
-            this.correctLength = this.distances.get(this.getEndNodeKey());
-        }
-    }
-
-    public abstract void findShortestPath();
-
-    public abstract void findShortestPathBasedOnDiff(Level difficulty);
-
-    public abstract Integer calculateScore(Level difficulty, Integer userPlayTime, Integer amountOfGuesses);
+    public abstract void findShortestPath(String startNodeKey);
 
     public abstract boolean parseInput(ArrayList<String> inputLines);
 
@@ -149,3 +58,4 @@ abstract class GraphADT {
         return edges;
     }
 }
+
