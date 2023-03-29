@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 public class GraphTest {
     private GraphADT graph;
-
+    //TODO checkGuess testing, and what we will change.
     @Before
     public void setUp() {
 
