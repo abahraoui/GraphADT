@@ -146,6 +146,22 @@ public class Graph extends GraphADT {
         return min == null ? null : min.getKey();
     }
 
+    public Integer calculateScore(Level difficulty, Integer userPlayTime, Integer amountOfGuesses) {
+        userPlayTime = Math.toIntExact(System.nanoTime() * (10 ^ 9)) - userPlayTime;
+        switch (difficulty) {
+            case EASY:
+                return (750 * ((10 / amountOfGuesses) / userPlayTime));
+
+            case MEDIUM:
+                return (1500 * ((10 / amountOfGuesses) / userPlayTime));
+
+            case HARD:
+                return (3000 * ((10 / amountOfGuesses) / userPlayTime));
+        }
+
+        return null; // if calculateScore returns null, it means that a difficulty has not been set/passed through
+    }
+
     // 0 36 {'weight': 9}
     @Override
     public boolean parseInput(ArrayList<String> lines) {
