@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Edge, Node } from "vis-network";
 import GraphService from "../GraphService";
 import { IGraphEdge } from "../IGraphModel";
 import GraphInner from "./GraphView";
 
 export default function Graph() {
-  const [edges, setEdges] = useState<IGraphEdge[]>([]);
+  const {
+    isLoading,
+    isError,
+    error,
+    data: edges,
+  } = useQuery<IGraphEdge[]>({
+    queryKey: ["getEdges"],
+    queryFn: GraphService.getEdges,
+  });
 
-  useEffect(() => {
-    if (edges.length === 0) load();
-  }, []);
-
-  const load = async () => {
-    console.log(await GraphService.createGraph("Easy", "0", "10"))
-    setEdges(await GraphService.getEdges());
-    // console.log(await GraphService.checkGuess(5));
-  };
+  if (isLoading) return <>Loading...</>;
+  if (isError) return <>Error {(error as any)?.message ?? ""}!</>;
 
   const edgeList: Edge[] = edges.map((e, i) => ({
     id: i,
@@ -56,8 +57,6 @@ export default function Graph() {
       border: "red",
     };
   }
-
-  if (edges.length === 0) return <>Loading...</>;
 
   return (
     <GraphInner

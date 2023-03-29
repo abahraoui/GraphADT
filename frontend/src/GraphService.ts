@@ -4,7 +4,6 @@ const API_URL = "http://localhost:8080";
 
 export default {
     getEdges: async (): Promise<IGraphEdge[]> => {
-
         return fetch(`${API_URL}/getEdges`)
             .then((res) => {
                 if (res.ok) return res.json();
