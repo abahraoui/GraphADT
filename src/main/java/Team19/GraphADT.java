@@ -9,11 +9,11 @@ import java.util.Scanner;
 
 abstract class GraphADT {
 
-    protected List<Node> nodes;
+    private ArrayList<Node> nodes;
     private String startNodeKey;
     private String endNodeKey;
     public double correctLength;
-    public List<String> correctPath = new ArrayList<String>();
+    public ArrayList<String> correctPath = new ArrayList<String>();
 
     protected Map<String, Double> distances = new HashMap<>();
     protected Map<String, ArrayList<String>> pathsOfAll = new HashMap<>();
@@ -23,15 +23,20 @@ abstract class GraphADT {
         this(new ArrayList<>());
     }
 
-    public GraphADT(List<Node> node) {
-        this.nodes = node; // Not sure if this is how we will load the graph tho.
+    public GraphADT(ArrayList<Node> node) {
+        this.nodes = node;
         this.difficulty = Level.EASY;
     }
 
-    public GraphADT(List<Node> node, String userStartNodeKey, String userEndNodeKey) {
+    public GraphADT(ArrayList<Node> node, String userStartNodeKey, String userEndNodeKey) {
         this.nodes = node;
         this.startNodeKey = userStartNodeKey;
-        this.endNodeKey = userEndNodeKey;        
+        this.endNodeKey = userEndNodeKey;
+        updateCorrectLength();
+    }
+
+    public ArrayList<Node> getNodes(){
+        return this.nodes;
     }
 
     public void setStartNodeKey(String startingNode) {

@@ -14,7 +14,14 @@ public class App extends Jooby {
     private static GraphADT graph;
 
     {
+        GraphADT graphtTest = new Graph();
+        graphtTest.importGraph("src/main/resources/sampleInput.txt");
+        if (graph == null) {
+            graph = graphtTest;
+        }  // This is for testing, in case the App is not called from main.
+
         use("*", new CorsHandler());
+
         get("/createGraph", req -> {
             String startNode = req.param("startNode").isSet() ? req.param("startNode").value() : null;
             String endNode = req.param("endNode").isSet() ? req.param("endNode").value() : null;
@@ -44,7 +51,7 @@ public class App extends Jooby {
         });
         get("/checkGuess", req -> graph.checkGuess(Integer.parseInt(req.param("guess").value())));
         get("/getEdges", () -> new Gson().toJson(graph.getEdges())); //TODO delete
-
+        get("/", () -> "Welcome to the Graph API! ");
     }
 
     public static void main(final String[] args) {
