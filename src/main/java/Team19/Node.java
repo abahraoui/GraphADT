@@ -3,7 +3,7 @@ package Team19;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Node {
+public class Node implements NodeI<String,Integer> {
 
     private String key;
     private Map<String, Integer> edges;
@@ -17,11 +17,11 @@ public class Node {
         return this.key;
     }
 
-    public void addEdge(String destinationNodeKey, int weight) {
+    public void addEdge(String destinationNodeKey, Integer weight) {
         edges.put(destinationNodeKey, weight);
     }
 
-    public int getEdgeWeight(String otherEdgeKey) {
+    public Integer getEdgeWeight(String otherEdgeKey) {
         return edges.get(otherEdgeKey);
     }
 
