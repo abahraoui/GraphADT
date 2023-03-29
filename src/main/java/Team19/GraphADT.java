@@ -13,7 +13,11 @@ abstract class GraphADT {
     private String startNodeKey;
     private String endNodeKey;
     public double correctLength;
-    public ArrayList<String> correctPath;
+    public List<String> correctPath = new ArrayList<String>();
+
+    protected Map<String, Double> distances = new HashMap<>();
+    protected Map<String, ArrayList<String>> pathsOfAll = new HashMap<>();
+
 
     public GraphADT() {
         this(new ArrayList<>());
@@ -21,7 +25,7 @@ abstract class GraphADT {
 
     public GraphADT(List<Node> node) {
         this.nodes = node; // Not sure if this is how we will load the graph tho.
-        this.correctPath = new ArrayList<String>();
+        this.difficulty = Level.EASY;
     }
 
     public GraphADT(List<Node> node, String userStartNodeKey, String userEndNodeKey) {
@@ -66,11 +70,14 @@ abstract class GraphADT {
     }
 
     private void updateCorrectLength() {
-        if (this.startNodeKey != null && this.endNodeKey != null)
-            this.correctLength = this.findShortestPath();
+        if (this.getStartNodeKey() != null && this.getEndNodeKey() != null) {
+            this.findShortestPath();
+            this.correctLength = this.distances.get(this.getEndNodeKey());
+        }
     }
 
-    public abstract double findShortestPath();
+    public abstract void findShortestPath();
+    public abstract void findShortestPathBasedOnDiff(Level difficulty);
 
     public abstract boolean parseInput(ArrayList<String> inputLines);
 

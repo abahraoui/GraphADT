@@ -12,9 +12,9 @@ export default function Graph() {
   }, []);
 
   const load = async () => {
-    console.log(await GraphService.createGraph(false, "0", "10"))
+    console.log(await GraphService.createGraph("Easy", "0", "10"))
     setEdges(await GraphService.getEdges());
-    console.log(await GraphService.checkGuess(5));
+    // console.log(await GraphService.checkGuess(5));
   };
 
   const edgeList: Edge[] = edges.map((e, i) => ({
