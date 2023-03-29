@@ -11,6 +11,20 @@ public class Graph extends GraphADT {
 
     static final Integer MINPATHLENGTH = 2; // Minimum length of a path
 
+
+    public Graph(ArrayList<Node> nodes, String startNode, String endNode){
+        super(nodes,startNode,endNode);
+    }
+
+    public Graph() {
+        super();
+    }
+
+    public Graph(ArrayList<Node> nodes){
+        super(nodes);
+
+    }
+
     public void findShortestPath() {
         if (this.getStartNodeKey() == null)
             throw new NullPointerException("No start node is set");
@@ -18,19 +32,19 @@ public class Graph extends GraphADT {
         Map<String, String> shortestPrevNode = new HashMap<>();
         Map<String, Boolean> sptSet = new HashMap<>();
 
-        this.nodes.forEach((node) -> {
+        this.getNodes().forEach((node) -> {
             this.distances.put(node.getKey(),
                     node.getKey().equals(this.getStartNodeKey()) ? 0 : Double.POSITIVE_INFINITY);
             sptSet.put(node.getKey(), false);
         });
 
-        for (int count = 0; count < this.nodes.size(); count++) {
+        for (int count = 0; count < this.getNodes().size(); count++) {
             String minDistanceEntryKey = minDistanceEntry(this.distances, sptSet);
-            Node outerNode = this.nodes.stream().filter(n -> n.getKey().equals(minDistanceEntryKey))
+            Node outerNode = this.getNodes().stream().filter(n -> n.getKey().equals(minDistanceEntryKey))
                     .findFirst().orElse(null);
             sptSet.put(outerNode.getKey(), true);
 
-            this.nodes.forEach(innerNode -> {
+            this.getNodes().forEach(innerNode -> {
                 Integer edgeWeight = outerNode.getEdges().get(innerNode.getKey());
                 Double outerNodeDistance = this.distances.get(outerNode.getKey());
                 Double innerNodeDistance = this.distances.get(innerNode.getKey());
@@ -45,7 +59,7 @@ public class Graph extends GraphADT {
         }
 
         Map<String, ArrayList<String>> pathOfAll = new HashMap<>();
-        this.nodes.forEach(node -> {
+        this.getNodes().forEach(node -> {
             if (node.getKey().equals(getStartNodeKey())) {
                 pathOfAll.put(node.getKey(),
                         new ArrayList<String>() {
@@ -142,7 +156,7 @@ public class Graph extends GraphADT {
                     Node node = null;
                     Node node2 = null;
 
-                    for (Node currentNode : this.nodes) {
+                    for (Node currentNode : this.getNodes()) {
                         if (currentNode.getKey().equals(thisNodeKey)) {
                             node = currentNode;
                             node.addEdge(thatNodeKey, edgeWeight);
@@ -155,12 +169,12 @@ public class Graph extends GraphADT {
 
                     if (node == null) {
                         node = new Node(thisNodeKey);
-                        this.nodes.add(node);
+                        this.getNodes().add(node);
                         node.addEdge(thatNodeKey, edgeWeight);
                     }
                     if (node2 == null) {
                         node2 = new Node(thatNodeKey);
-                        this.nodes.add(node2);
+                        this.getNodes().add(node2);
                         node2.addEdge(thisNodeKey, edgeWeight);
                     }
 

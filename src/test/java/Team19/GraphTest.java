@@ -14,8 +14,10 @@ public class GraphTest {
 
     @Before
     public void setUp() {
+
         graph = new Graph();
         graph.importGraph("src/main/resources/sampleInput.txt");
+
     }
 
     @Test
@@ -56,12 +58,19 @@ public class GraphTest {
 
     @Test
     public void testSecondGraphConstructor() {
-        //  GraphADT graphTest = new Graph(graph.nodes, graph.getStartNodeKey() ,graph.getEndNodeKey());
+         GraphADT graphTest = new Graph(graph.getNodes());
+         assertNotNull(graphTest.getNodes());
+         graphTest = new Graph(graph.getNodes(), "0", "10");
+         assertNotNull(graphTest.getNodes());
+         assertNotNull(graphTest.getStartNodeKey());
+         assertNotNull(graphTest.getEndNodeKey());
+
+
     }
 
     @Test
     public void testNode() {
-        Node node = graph.nodes.get(0);
+        Node node = graph.getNodes().get(0);
         assertEquals(node.getEdgeWeight("11"), 5);
         assertEquals(node.toString(), "Node: key: 0, edges: {11=5, 1=7, 35=4, 25=4, 36=9, 47=3, 28=1}");
     }

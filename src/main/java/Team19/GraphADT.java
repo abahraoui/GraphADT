@@ -12,14 +12,14 @@ abstract class GraphADT {
         HARD
     }
 
-    protected List<Node> nodes;
+    private ArrayList<Node> nodes;
     private String startNodeKey;
 
     public Level difficulty;
 
     private String endNodeKey;
     public double correctLength;
-    public List<String> correctPath = new ArrayList<String>();
+    public ArrayList<String> correctPath = new ArrayList<String>();
 
     protected Map<String, Double> distances = new HashMap<>();
     protected Map<String, ArrayList<String>> pathsOfAll = new HashMap<>();
@@ -29,16 +29,20 @@ abstract class GraphADT {
         this(new ArrayList<>());
     }
 
-    public GraphADT(List<Node> node) {
+    public GraphADT(ArrayList<Node> node) {
         this.nodes = node;
         this.difficulty = Level.EASY;
     }
 
-    public GraphADT(List<Node> node, String userStartNodeKey, String userEndNodeKey) {
+    public GraphADT(ArrayList<Node> node, String userStartNodeKey, String userEndNodeKey) {
         this.nodes = node;
         this.startNodeKey = userStartNodeKey;
         this.endNodeKey = userEndNodeKey;
         updateCorrectLength();
+    }
+
+    public ArrayList<Node> getNodes(){
+        return this.nodes;
     }
 
     public void setStartNodeKey(String startingNode) {
