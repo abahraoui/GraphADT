@@ -4,7 +4,15 @@ import GraphService from "../GraphService";
 import { IGraphEdge } from "../IGraphModel";
 import GraphInner from "./GraphView";
 
-export default function Graph() {
+interface IProps {
+  startNode: string | undefined;
+  endNode: string | undefined;
+  setStartNode: (node: string | undefined) => void;
+  setEndNode: (node: string | undefined) => void;
+  selectedInput: "START" | "END" | undefined;
+}
+
+export default function Graph(props: IProps) {
   const {
     isLoading,
     isError,
@@ -36,33 +44,35 @@ export default function Graph() {
     },
   }));
 
-  const shuffled = Array(nodeList.length)
-    .fill(null)
-    .map((_v, i) => i)
-    .sort(() => 0.5 - Math.random());
-
-  const [startNodeIndex, endNodeIndex] = shuffled.slice(0, 2);
+  const startNodeIndex = nodeList.findIndex((n) => n.id == props.startNode);
+  const endNodeIndex = nodeList.findIndex((n) => n.id == props.endNode);
   if (nodeList.length != 0) {
-    nodeList[startNodeIndex].color = {
-      background: "lightgreen",
-      highlight: "lightgreen",
-      hover: "lightgreen",
-      border: "green",
-    };
+    if (startNodeIndex !== -1)
+      nodeList[startNodeIndex].color = {
+        background: "lightgreen",
+        highlight: "lightgreen",
+        hover: "lightgreen",
+        border: "green",
+      };
 
-    nodeList[endNodeIndex].color = {
-      background: "#ff8484",
-      highlight: "#ff8484",
-      hover: "#ff8484",
-      border: "red",
-    };
+    if (endNodeIndex !== -1)
+      nodeList[endNodeIndex].color = {
+        background: "#ff8484",
+        highlight: "#ff8484",
+        hover: "#ff8484",
+        border: "red",
+      };
   }
 
   return (
     <GraphInner
+      key={`${props.startNode}-${props.endNode}`}
       nodes={nodeList}
       edges={edgeList}
       height={(innerHeight * 3) / 4}
+      setStartNode={props.setStartNode}
+      setEndNode={props.setEndNode}
+      selectedInput={props.selectedInput}
     />
   );
 }

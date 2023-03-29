@@ -6,6 +6,9 @@ interface IProps {
   edges: Edge[];
   nodes: Node[];
   height: number;
+  setStartNode: (node: string | undefined) => void;
+  setEndNode: (node: string | undefined) => void;
+  selectedInput: "START" | "END" | undefined;
 }
 
 export default function GraphInner(props: IProps) {
@@ -16,10 +19,22 @@ export default function GraphInner(props: IProps) {
     nodes: props.nodes,
   });
 
+  const onNodeClick = (ctx: { nodes: number[] }) => {
+    if (isNaN(ctx.nodes[0])) return;
+    const newNodeKey = `${ctx.nodes[0]}`;
+
+    if (props.selectedInput === "START") props.setStartNode(newNodeKey);
+    else if (props.selectedInput === "END") props.setEndNode(newNodeKey);
+  };
+
   useEffect(() => {
     if (!network) return;
     network.once("afterDrawing", () => setIsLoading(false));
-  }, [network]);
+    network.on("click", onNodeClick);
+    return () => {
+      network.off("click", onNodeClick);
+    };
+  }, [network, props.selectedInput]);
 
   return (
     <div className="h-full">

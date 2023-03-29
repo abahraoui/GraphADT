@@ -1,15 +1,18 @@
 import { useState } from "react";
+import { ISelectedInput } from "../App";
 
 const DIFFICULTIES = ["Easy", "Medium", "Hard", "Custom"];
 
-export default function GraphSettings(props: {
+interface IProps {
   startNode?: string;
   endNode?: string;
-}) {
+  selectedInput: ISelectedInput;
+  setSelectedInput: (input: ISelectedInput) => void;
+}
+
+export default function GraphSettings(props: IProps) {
   const [chosenDifficulty, setChosenDifficulty] = useState<string>("Easy");
-  const [selectedInput, setSelectedInput] = useState<"START" | "END" | null>(
-    null
-  );
+
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChosenDifficulty(e.target.value);
   };
@@ -45,17 +48,17 @@ export default function GraphSettings(props: {
           <InputField
             title="Start node"
             id="startNodeInput"
-            onClick={() => setSelectedInput("START")}
+            onClick={() => props.setSelectedInput("START")}
             disabled={isNodeSelectionDisables}
-            focused={selectedInput === "START"}
+            focused={props.selectedInput === "START"}
             content={props.startNode || ""}
           />
           <InputField
             title="End node"
             id="endNodeInput"
-            onClick={() => setSelectedInput("END")}
+            onClick={() => props.setSelectedInput("END")}
             disabled={isNodeSelectionDisables}
-            focused={selectedInput === "END"}
+            focused={props.selectedInput === "END"}
             content={props.endNode || ""}
           />
         </div>
@@ -88,9 +91,9 @@ function InputField(props: IInputProps) {
       </label>
       <div
         className="w-10 h-10 bg-gray-50 rounded border
-        aria-pressed:ring transition-all
-        aria-disabled:text-gray-400
-        flex items-center justify-center"
+            aria-pressed:ring transition-all
+            aria-disabled:text-gray-400
+            flex items-center justify-center"
         aria-disabled={props.disabled}
         aria-pressed={!props.disabled && props.focused}
         onClick={props.onClick}
