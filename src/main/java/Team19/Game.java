@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map.Entry;
 
 
-public class game {
+public class Game {
 	
-	public game() {
+	public Game() {
         this.graph = new Graph();
     }
 	
@@ -19,19 +19,18 @@ public class game {
 	
 	final Integer MINPATHLENGTH = 2; // Minimum length of a path
 	
-	public Level difficulty;
+	private Level difficulty;
 	
 	public Graph graph;
 	
 	private String startNodeKey;
 	private String endNodeKey;
 
-	 public double correctLength;
-	 public List<String> correctPath;
-	 
-	 public Integer amountOfGuesses = 0;
-
-	 public Integer userPlayTime = 0;
+	public double correctLength;
+	public List<String> correctPath;
+	
+	public Integer amountOfGuesses = 0;
+	public Integer userPlayTime = 0;
 
 public void setStartNodeKey(String startingNode) {
     this.startNodeKey = startingNode;
@@ -52,7 +51,7 @@ public void setEndNodeKey(String endingNode) {
     this.updateCorrectLength();
 }
 
-public void setRandomEndNode(String diff) {
+public void setDifficulty(String diff){
     switch (diff) {
         case "easy":
             difficulty = Level.EASY;
@@ -65,8 +64,10 @@ public void setRandomEndNode(String diff) {
             break;
     }
 
+}
 
-    this.findShortestPathBasedOnDiff(difficulty);
+public void setRandomEndNode() {
+    this.findShortestPathBasedOnDiff();
 /*        this.endNodeKey = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size()+ 1) + 0));
     if(this.endNodeKey == this.startNodeKey) {
         this.setRandomEndNode();
@@ -77,9 +78,9 @@ public void setRandomEndNode(String diff) {
 
 }
 
-public Integer calculateScore(Level difficulty, Integer userPlayTime, Integer amountOfGuesses) {
+public Integer calculateScore(Integer userPlayTime, Integer amountOfGuesses) {
     userPlayTime = Math.toIntExact(System.nanoTime() * (10 ^ 9)) - userPlayTime;
-    switch (difficulty) {
+    switch (this.difficulty) {
         case EASY:
             return (750 * ((10 / amountOfGuesses) / userPlayTime));
 
@@ -111,7 +112,7 @@ public String checkGuess(int playerGuess) {
         return "HIGHER";
     return "CORRECT";
 }
-public void findShortestPathBasedOnDiff(Level Difficulty) {
+public void findShortestPathBasedOnDiff() {
     graph.findShortestPath(this.getStartNodeKey());
     Integer max = 2;
 
@@ -125,7 +126,7 @@ public void findShortestPathBasedOnDiff(Level Difficulty) {
 
     Integer skillDifferenceRandomized = (int) (Math.random() * skillDifference);
 
-    switch (Difficulty) {
+    switch (this.difficulty) {
         case EASY:
             this.setEndNodeKey(pickEndNodeBasedOnDiff(MINPATHLENGTH + skillDifferenceRandomized));
             break;

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 @Path("/")
 public class MyController {
 
-    private static GraphADT graph;
+    private static Game game;
 
     public MyController(){
-        graph = new Graph();
-        graph.importGraph("src/main/resources/sampleInput.txt");
+        game = new Game();
+        game.graph.importGraph("src/main/resources/sampleInput.txt");
     }
 
     @GET("/")
@@ -29,17 +29,19 @@ public class MyController {
     public String createGraph(@QueryParam String start_node, @QueryParam String end_node, @QueryParam String difficulty) {
         String startNode = start_node != null ? start_node : null;
         String endNode = end_node != null ? end_node : null;
-        String diff = difficulty != null ? difficulty.toLowerCase() : "easy";
-        if (startNode == null) {
-            graph.setRandomStartNode();
-            graph.setRandomEndNode(diff);
+        String diff = difficulty != null ? difficulty.toLowerCase() : null;
+        if (diff != null) {
+            game.setDifficulty(diff);
+            game.setRandomStartNode();
+            game.setRandomEndNode();
         } else {
-            graph.setStartNodeKey(startNode);
-            graph.setEndNodeKey(endNode);
+            game.setDifficulty("easy");
+            game.setStartNodeKey(startNode);
+            game.setEndNodeKey(endNode);
         }
 
         JsonArray edgesJson = new JsonArray();
-        ArrayList<EdgeDTO> edges = graph.getEdges();
+        ArrayList<EdgeDTO> edges = game.graph.getEdges();
         edges.forEach(edge -> {
             JsonObject edgeJson = new JsonObject();
             edgeJson.addProperty("from", edge.from);
@@ -50,8 +52,8 @@ public class MyController {
         JsonObject response = new JsonObject();
         Long startTime = System.nanoTime();
         //   graph.userPlayTime = Math.toIntExact(startTime*(10^9));
-        response.addProperty("startNodeKey", graph.getStartNodeKey());
-        response.addProperty("endNodeKey",graph.getEndNodeKey());
+        response.addProperty("startNodeKey", game.getStartNodeKey());
+        response.addProperty("endNodeKey",game.getEndNodeKey());
         response.add("edges", edgesJson);
         return new Gson().toJson(response);
 
@@ -59,13 +61,13 @@ public class MyController {
 
     @GET("/getEdges")
     public String getEdges() {
-        return new Gson().toJson(graph.getEdges());
+        return new Gson().toJson(game.graph.getEdges());
 
     }
 
     @GET("/checkGuess")
     public String checkGuess(@QueryParam String guess) {
-        return graph.checkGuess(Integer.parseInt(guess));
+        return game.checkGuess(Integer.parseInt(guess));
     }
 
 
