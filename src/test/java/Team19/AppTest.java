@@ -31,13 +31,18 @@ public class AppTest {
     @Test
     public void integrationTest() throws Throwable {
 
-        HttpUriRequest request = new HttpGet("http://localhost:8080/");
-        CloseableHttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+        HttpUriRequest requestLandingPage = new HttpGet("http://localhost:8080/");
+        CloseableHttpResponse httpResponse = HttpClientBuilder.create().build().execute(requestLandingPage);
         assertEquals("HTTP/1.1 200 OK", httpResponse.getStatusLine().toString());
 
-        HttpUriRequest request2 = new HttpGet("http://localhost:8080/createGraph");
-        httpResponse = HttpClientBuilder.create().build().execute(request2);
+        HttpUriRequest requestCreateGraph1 = new HttpGet("http://localhost:8080/createGraph");
+        httpResponse = HttpClientBuilder.create().build().execute(requestCreateGraph1);
         assertEquals("HTTP/1.1 200 OK", httpResponse.getStatusLine().toString());
+
+        HttpUriRequest requestCreateGraph2 = new HttpGet("http://localhost:8080/createGraph?startNode=1&endNode=8");
+        httpResponse = HttpClientBuilder.create().build().execute(requestCreateGraph2);
+        assertEquals("HTTP/1.1 200 OK", httpResponse.getStatusLine().toString());
+
 
         HttpUriRequest request3 = new HttpGet("http://localhost:8080/checkGuess?guess=2");
         httpResponse = HttpClientBuilder.create().build().execute(request3);

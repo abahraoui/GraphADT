@@ -20,7 +20,7 @@ abstract class GraphADT {
     public double correctLength;
     public List<String> correctPath;
 
-    protected Map<String, Double> distances;
+    protected Map<String, Double> distances = new HashMap<>();
     protected Map<String, ArrayList<String>> pathsOfAll;
 
 
@@ -120,10 +120,8 @@ abstract class GraphADT {
             //System.out.println(data.toString());
             return this.parseInput(data);
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            throw new NullPointerException("File not found.");
         }
-        return false;
     }
 
     public ArrayList<EdgeDTO> getEdges() {

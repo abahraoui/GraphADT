@@ -80,15 +80,25 @@ public class GraphTest {
 
     @Test
     public void testErrors() {
-        exceptionRule.expect(NullPointerException.class);
-        exceptionRule.expectMessage("No start node is set");
-        graph.findShortestPath();
-        exceptionRule.expect(NullPointerException.class);
-        exceptionRule.expectMessage("An error occured because of your input");
-        graph.parseInput(new ArrayList<>());
-        assertFalse(graph.importGraph(""));
+        try {
+            graph.parseInput(null);
+            fail("Expected exception was not thrown");
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
 
+        try {
+            graph.findShortestPath();
+            fail("Expected exception was not thrown");
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
+        try {
+            graph.importGraph("null");
+            fail("Expected exception was not thrown");
+        } catch (Exception e) {
+            assertNotNull(e);
+        }
     }
-
 
 }

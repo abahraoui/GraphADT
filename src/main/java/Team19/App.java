@@ -14,10 +14,9 @@ public class App extends Jooby {
     private static GraphADT graph;
 
     {
-        GraphADT graphtTest = new Graph();
-        graphtTest.importGraph("src/main/resources/sampleInput.txt");
         if (graph == null) {
-            graph = graphtTest;
+            graph = new Graph();
+            graph.importGraph("src/main/resources/sampleInput.txt");
         }  // This is for testing, in case the App is not called from main.
 
         use("*", new CorsHandler());
