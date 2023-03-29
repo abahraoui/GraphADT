@@ -9,13 +9,6 @@ import java.util.regex.Pattern;
 
 public class Graph extends GraphADT {
 
-    static final Integer MINPATHLENGTH = 2; // Minimum length of a path
-
-
-    public Graph(ArrayList<Node> nodes, String startNode, String endNode){
-        super(nodes,startNode,endNode);
-    }
-
     public Graph() {
         super();
     }
@@ -25,8 +18,8 @@ public class Graph extends GraphADT {
 
     }
 
-    public void findShortestPath() {
-        if (this.getStartNodeKey() == null)
+    public void findShortestPath(String startNodeKey) {
+        if (startNodeKey == null)
             throw new NullPointerException("No start node is set");
 
         Map<String, String> shortestPrevNode = new HashMap<>();
@@ -34,7 +27,7 @@ public class Graph extends GraphADT {
 
         this.getNodes().forEach((node) -> {
             this.distances.put(node.getKey(),
-                    node.getKey().equals(this.getStartNodeKey()) ? 0 : Double.POSITIVE_INFINITY);
+                    node.getKey().equals(startNodeKey) ? 0 : Double.POSITIVE_INFINITY);
             sptSet.put(node.getKey(), false);
         });
 
@@ -60,7 +53,7 @@ public class Graph extends GraphADT {
 
         Map<String, ArrayList<String>> pathOfAll = new HashMap<>();
         this.getNodes().forEach(node -> {
-            if (node.getKey().equals(getStartNodeKey())) {
+            if (node.getKey().equals(startNodeKey)) {
                 pathOfAll.put(node.getKey(),
                         new ArrayList<String>() {
                             {
@@ -73,7 +66,7 @@ public class Graph extends GraphADT {
             pathToThisNode.add(node.getKey());
             String tempEnd = shortestPrevNode.get(node.getKey());
             if (tempEnd != null) {
-                while (!(tempEnd.equals(this.getStartNodeKey()))) {
+                while (!(tempEnd.equals(startNodeKey))) {
                     pathToThisNode.add(tempEnd);
                     tempEnd = shortestPrevNode.get(tempEnd);
                 }
@@ -91,52 +84,6 @@ public class Graph extends GraphADT {
         this.pathsOfAll = pathOfAll;
     }
 
-    public void findShortestPathBasedOnDiff(Level Difficulty) {
-        findShortestPath();
-        Integer max = 2;
-
-        for (ArrayList<String> list : this.pathsOfAll.values()) {
-            if (list.size() > max)
-                max = list.size();
-        }
-        System.out.println("Path with max hops: " + max);
-
-        Integer skillDifference = (max - MINPATHLENGTH) % 3;
-
-        Integer skillDifferenceRandomized = (int) (Math.random() * skillDifference);
-
-        switch (Difficulty) {
-            case EASY:
-                setEndNodeKey(pickEndNodeBasedOnDiff(MINPATHLENGTH + skillDifferenceRandomized));
-                break;
-            case MEDIUM:
-                setEndNodeKey(pickEndNodeBasedOnDiff(skillDifference + MINPATHLENGTH + skillDifferenceRandomized));
-                break;
-            case HARD:
-                setEndNodeKey(
-                        pickEndNodeBasedOnDiff((skillDifference * 2) + MINPATHLENGTH + skillDifferenceRandomized));
-                break;
-        }
-    }
-
-    private String pickEndNodeBasedOnDiff(int skillIssue) {
-        String randomlyPickedEndNote = null;
-        for (Entry<String, ArrayList<String>> e : this.pathsOfAll.entrySet()) {
-            if (e.getValue().size() == skillIssue) {
-                if (randomlyPickedEndNote == null) {
-                    randomlyPickedEndNote = e.getKey();
-                } else {
-                    if (Math.random() > 0.5) {
-                        randomlyPickedEndNote = e.getKey();
-                    }
-                }
-            }
-        }
-
-        this.correctPath = this.pathsOfAll.get(randomlyPickedEndNote);
-
-        return randomlyPickedEndNote;
-    }
 
     private String minDistanceEntry(Map<String, Double> distances, Map<String, Boolean> sptSet) {
         Entry<String, Double> min = null;
@@ -146,21 +93,7 @@ public class Graph extends GraphADT {
         return min == null ? null : min.getKey();
     }
 
-    public Integer calculateScore(Level difficulty, Integer userPlayTime, Integer amountOfGuesses) {
-        userPlayTime = Math.toIntExact(System.nanoTime() * (10 ^ 9)) - userPlayTime;
-        switch (difficulty) {
-            case EASY:
-                return (750 * ((10 / amountOfGuesses) / userPlayTime));
-
-            case MEDIUM:
-                return (1500 * ((10 / amountOfGuesses) / userPlayTime));
-
-            case HARD:
-                return (3000 * ((10 / amountOfGuesses) / userPlayTime));
-        }
-
-        return null; // if calculateScore returns null, it means that a difficulty has not been set/passed through
-    }
+   
 
     // 0 36 {'weight': 9}
     @Override
@@ -208,5 +141,7 @@ public class Graph extends GraphADT {
 
         return true;
     }
+
+	
 
 }
