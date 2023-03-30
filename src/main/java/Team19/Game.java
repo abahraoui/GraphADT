@@ -30,7 +30,7 @@ public class Game {
 	public List<String> correctPath;
 	
 	public Integer amountOfGuesses = 0;
-	public Integer userPlayTime = 0;
+	public long userPlayTime = 0;
 
 public void setStartNodeKey(String startingNode) {
     this.startNodeKey = startingNode;
@@ -78,8 +78,8 @@ public void setRandomEndNode() {
 
 }
 
-public Integer calculateScore(Integer userPlayTime, Integer amountOfGuesses) {
-    userPlayTime = Math.toIntExact(System.nanoTime() * (10 ^ 9)) - userPlayTime;
+public long calculateScore(long userPlayTime, Integer amountOfGuesses) {
+    userPlayTime = System.nanoTime() / (10 ^ 9) - userPlayTime;
     switch (this.difficulty) {
         case EASY:
             return (750 * ((10 / amountOfGuesses) / userPlayTime));
@@ -91,7 +91,7 @@ public Integer calculateScore(Integer userPlayTime, Integer amountOfGuesses) {
             return (3000 * ((10 / amountOfGuesses) / userPlayTime));
     }
 
-    return null; // if calculateScore returns null, it means that a difficulty has not been set/passed through
+    return -1; // if calculateScore returns -1, it means that a difficulty has not been set/passed through
 }
 public String getEndNodeKey() {
     return endNodeKey;

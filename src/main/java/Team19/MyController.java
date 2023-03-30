@@ -50,8 +50,7 @@ public class MyController {
             edgesJson.add(edgeJson);
         });
         JsonObject response = new JsonObject();
-        Long startTime = System.nanoTime();
-        //   graph.userPlayTime = Math.toIntExact(startTime*(10^9));
+        game.userPlayTime = System.nanoTime()/(10^9);
         response.addProperty("startNodeKey", game.getStartNodeKey());
         response.addProperty("endNodeKey",game.getEndNodeKey());
         response.add("edges", edgesJson);
