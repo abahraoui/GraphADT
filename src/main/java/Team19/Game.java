@@ -12,9 +12,9 @@ public class Game {
     }
 	
 	enum Level {
-        EASY,
+        HARD,
         MEDIUM,
-        HARD
+        EASY
     }
 	
 	final Integer MINPATHLENGTH = 2; // Minimum length of a path
@@ -53,17 +53,16 @@ public void setEndNodeKey(String endingNode) {
 
 public void setDifficulty(String diff){
     switch (diff) {
-        case "easy":
-            difficulty = Level.EASY;
+        case "hard":
+            difficulty = Level.HARD;
             break;
         case "medium":
             difficulty = Level.MEDIUM;
             break;
         default:
-            difficulty = Level.HARD;
+            difficulty = Level.EASY;
             break;
     }
-
 }
 
 public void setRandomEndNode() {
@@ -75,24 +74,20 @@ public void setRandomEndNode() {
     updateCorrectLength();
     System.out.println(correctPath);
     System.out.println(correctLength);
-
 }
 
 public Integer calculateScore(Integer userPlayTime, Integer amountOfGuesses) {
     userPlayTime = Math.toIntExact(System.nanoTime() * (10 ^ 9)) - userPlayTime;
     switch (this.difficulty) {
-        case EASY:
-            return (750 * ((10 / amountOfGuesses) / userPlayTime));
-
+        case HARD:
+            return (3000 * ((10 / amountOfGuesses) / userPlayTime));    
         case MEDIUM:
             return (1500 * ((10 / amountOfGuesses) / userPlayTime));
-
-        case HARD:
-            return (3000 * ((10 / amountOfGuesses) / userPlayTime));
+        default: //custom difficulty is rewarded the same as easy
+            return (750 * ((10 / amountOfGuesses) / userPlayTime));
     }
-
-    return null; // if calculateScore returns null, it means that a difficulty has not been set/passed through
 }
+
 public String getEndNodeKey() {
     return endNodeKey;
 }
@@ -110,8 +105,10 @@ public String checkGuess(int playerGuess) {
         return "LOWER";
     if (playerGuess < correctLength)
         return "HIGHER";
-    return "CORRECT";
+    // Integer score = this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
+    return "CORRECT your score was"+this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
 }
+
 public void findShortestPathBasedOnDiff() {
     graph.findShortestPath(this.getStartNodeKey());
     Integer max = 2;
@@ -153,11 +150,10 @@ private String pickEndNodeBasedOnDiff(int skillIssue) {
             }
         }
     }
-
     this.correctPath = graph.pathsOfAll.get(randomlyPickedEndNote);
-
     return randomlyPickedEndNote;
 }
+
 }
 
 
