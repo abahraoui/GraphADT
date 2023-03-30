@@ -4,13 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-abstract class GraphADT {
+abstract class GraphADT<NodeKey,NodeWeight,EdgeInterface,NodeInterface> {
     
 
-    private ArrayList<Node> nodes;
+    protected ArrayList<NodeInterface> nodes;
+    protected ArrayList<EdgeInterface> edges;
 
-    protected Map<String, Double> distances = new HashMap<>();
-    protected Map<String, ArrayList<String>> pathsOfAll;
+    protected Map<NodeKey, NodeWeight> distances = new HashMap<>();
+    protected Map<NodeKey, ArrayList<NodeKey>> pathsOfAll;
 
 
     public GraphADT() {
@@ -18,17 +19,20 @@ abstract class GraphADT {
 
     }
     
-    public GraphADT(ArrayList<Node> node) {
+    public GraphADT(ArrayList<NodeInterface> node) {
         this.nodes = node;
+        this.edges = new ArrayList<>();
     }
 
-    public ArrayList<Node> getNodes(){
+    public ArrayList<NodeInterface> getNodes(){
         return this.nodes;
     }
 
-    public abstract void findShortestPath(String startNodeKey);
+    public abstract void findShortestPath(NodeKey startNodeKey);
 
     public abstract boolean parseInput(ArrayList<String> inputLines);
+
+    public abstract void updateEdges();
 
     public boolean importGraph(String input) {
         try {
@@ -45,16 +49,8 @@ abstract class GraphADT {
             throw new NullPointerException("File not found.");
         }
     }
-
-    public ArrayList<EdgeDTO> getEdges() {
-        ArrayList<EdgeDTO> edges = new ArrayList<>();
-        this.nodes.forEach(node -> {
-            Map<String, Integer> currentEdges = node.getEdges();
-            currentEdges.forEach((currentTo, currentWeight) -> {
-                EdgeDTO currentEdge = new EdgeDTO(node.getKey(), currentTo, currentWeight);
-                if (!edges.contains(currentEdge)) edges.add(currentEdge);
-            });
-        });
+    public ArrayList<EdgeInterface> getEdges() {
+        this.updateEdges();
         return edges;
     }
 }

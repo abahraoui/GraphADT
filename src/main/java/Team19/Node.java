@@ -3,13 +3,13 @@ package Team19;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Node implements NodeI<String,Integer> {
+public class Node implements INode<String,Double> {
 
     private String key;
-    private Map<String, Integer> edges;
+    private Map<String, Double> edges;
 
     public Node(String key) {
-        this.edges = new HashMap<String, Integer>();
+        this.edges = new HashMap<String, Double>();
         this.key = key;
     }
 
@@ -17,15 +17,15 @@ public class Node implements NodeI<String,Integer> {
         return this.key;
     }
 
-    public void addEdge(String destinationNodeKey, Integer weight) {
+    public void addEdge(String destinationNodeKey, Double weight) {
         edges.put(destinationNodeKey, weight);
     }
 
-    public Integer getEdgeWeight(String otherEdgeKey) {
+    public Double getEdgeWeight(String otherEdgeKey) {
         return edges.get(otherEdgeKey);
     }
 
-    public Map<String, Integer> getEdges() {
+    public Map<String, Double> getEdges() {
         return edges;
     }
 
