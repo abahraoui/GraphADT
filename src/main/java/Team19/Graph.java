@@ -17,7 +17,11 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
         super(nodes);
 
     }
-
+    //TODO comment this please - maybe refactor and sub method it its too big
+    /**
+     *
+     * @param startNodeKey
+     */
     public void findShortestPath(String startNodeKey) {
         if (startNodeKey == null)
             throw new NullPointerException("No start node is set");
@@ -84,7 +88,13 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
         this.pathsOfAll = pathOfAll;
     }
 
-
+    //TODO comment this please
+    /**
+     *
+     * @param distances
+     * @param sptSet
+     * @return
+     */
     private String minDistanceEntry(Map<String, Double> distances, Map<String, Boolean> sptSet) {
         Entry<String, Double> min = null;
         for (Entry<String, Double> entry : distances.entrySet())
@@ -142,7 +152,6 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
         return true;
     }
 
-    @Override
     public void updateEdges() {
         // ArrayList<EdgeDTO> edges = new ArrayList<>();
         this.nodes.forEach(node -> {
@@ -153,7 +162,7 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
             });
         });
     }
-    @Override
+
     public ArrayList<EdgeDTO> getEdges() {
         // ArrayList<EdgeDTO> edges = new ArrayList<>();
         updateEdges();

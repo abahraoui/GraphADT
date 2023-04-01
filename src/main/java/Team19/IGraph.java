@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 public interface IGraph<NodeInterface,EdgeInterface,NodeKey>  {
 
-    public ArrayList<NodeInterface> getNodes();
+    ArrayList<NodeInterface> getNodes();
 
-    public abstract void findShortestPath(NodeKey startNodeKey);
+    abstract void findShortestPath(NodeKey startNodeKey);
 
-    public abstract boolean parseInput(ArrayList<String> inputLines);
+    abstract boolean parseInput(ArrayList<String> inputLines);
 
-    public boolean importGraph(String input); 
+    boolean importGraph(String input); 
 
-    public ArrayList<EdgeInterface> getEdges();
+    ArrayList<EdgeInterface> getEdges();
     
 }

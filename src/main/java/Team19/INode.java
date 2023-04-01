@@ -3,8 +3,8 @@ package Team19;
 import java.util.Map;
 
 public interface INode<Key,Weight> {
-    public Key getKey();
-    public void addEdge(Key destinationNodeKey,Weight weight);
-    public Weight getEdgeWeight(Key otherEdgeKey);
-    public Map<Key, Weight> getEdges();
+    Key getKey();
+    void addEdge(Key destinationNodeKey,Weight weight);
+    Weight getEdgeWeight(Key otherEdgeKey);
+    Map<Key, Weight> getEdges();
 }
