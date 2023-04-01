@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { DIFFICULTIES } from "../helpers/constants";
 import { useStores } from "../helpers/useStores";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 export default observer(function GraphSettings() {
   const {
@@ -10,9 +11,14 @@ export default observer(function GraphSettings() {
     startNode,
     endNode,
     canStartGame,
+    isCreatingGraph,
+    isPlaying,
+    startPlaying,
   } = useStores();
 
-  const onPlay = () => {};
+  const onAbort = () => {
+    confirm("Are you sure you want to abort the game?");
+  };
 
   const isNodeSelectionDisabled = chosenDifficulty !== "Custom";
 
@@ -59,14 +65,31 @@ export default observer(function GraphSettings() {
             content={endNode || ""}
           />
         </div>
-        <button
-          className="rounded bg-green-500 py-2 px-4 text-lg font-bold text-white shadow transition-all
+        <div className="flex items-center gap-2">
+          {isCreatingGraph ? (
+            <LoadingSpinner />
+          ) : (
+            !isPlaying && (
+              <button
+                className="rounded bg-green-500 py-2 px-4 text-lg font-bold text-white shadow transition-all
           hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
-          onClick={onPlay}
-          disabled={!canStartGame}
-        >
-          Play
-        </button>
+                onClick={startPlaying}
+                disabled={!canStartGame}
+              >
+                Play
+              </button>
+            )
+          )}
+          {isPlaying && (
+            <button
+              className="rounded bg-red-500 py-2 px-4 text-lg font-bold text-white shadow transition-all
+          hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={onAbort}
+            >
+              Abort
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,26 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
 import { observer } from "mobx-react-lite";
 import { Edge, Node } from "vis-network";
-import GraphService from "../GraphService";
 import { useStores } from "../helpers/useStores";
-import { IGraphEdge } from "../IGraphModel";
 import GraphInner from "./GraphView";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 export default observer(function Graph() {
-  const {
-    isLoading,
-    isError,
-    error,
-    data: edges,
-  } = useQuery<IGraphEdge[]>({
-    queryKey: ["getEdges"],
-    queryFn: GraphService.getEdges,
-  });
 
-  const { startNode, endNode } = useStores();
+  const { startNode, endNode, edges, isLoadingGraph } = useStores();
 
-  if (isLoading) return <>Loading...</>;
-  if (isError) return <>Error {(error as any)?.message ?? ""}!</>;
+  if (!edges || isLoadingGraph)
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  // if (isError) return <>Error {(error as any)?.message ?? ""}!</>;
 
   const edgeList: Edge[] = edges.map((e, i) => ({
     id: i,
@@ -62,7 +56,7 @@ export default observer(function Graph() {
 
   return (
     <GraphInner
-      key={`${startNode}-${endNode}`}
+      key={`${startNode}-${endNode}-${edges.length}`}
       nodes={nodeList}
       edges={edgeList}
       height={(innerHeight * 3) / 4}

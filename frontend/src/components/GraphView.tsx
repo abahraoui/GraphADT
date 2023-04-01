@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Edge, Node } from "vis-network";
 import { useStores } from "../helpers/useStores";
 import useVisNetwork from "../useVisNetwork";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 interface IProps {
   edges: Edge[];
@@ -38,7 +39,11 @@ export default observer(function GraphInner(props: IProps) {
 
   return (
     <div className="h-full">
-      {isLoading && <span>Loading...</span>}
+      {isLoading && (
+        <div className="flex justify-center">
+          <LoadingSpinner />
+        </div>
+      )}
       <div className={isLoading ? "" : "h-full"} ref={ref} />
     </div>
   );

@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.28.0",
     "mobx": "^6.9.0",
     "mobx-react-lite": "^3.4.3",
     "mobx-state-tree": "^5.1.8",
