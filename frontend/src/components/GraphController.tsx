@@ -1,18 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { observer } from "mobx-react-lite";
 import { Edge, Node } from "vis-network";
 import GraphService from "../GraphService";
+import { useStores } from "../helpers/useStores";
 import { IGraphEdge } from "../IGraphModel";
 import GraphInner from "./GraphView";
 
-interface IProps {
-  startNode: string | undefined;
-  endNode: string | undefined;
-  setStartNode: (node: string | undefined) => void;
-  setEndNode: (node: string | undefined) => void;
-  selectedInput: "START" | "END" | undefined;
-}
-
-export default function Graph(props: IProps) {
+export default observer(function Graph() {
   const {
     isLoading,
     isError,
@@ -22,6 +16,8 @@ export default function Graph(props: IProps) {
     queryKey: ["getEdges"],
     queryFn: GraphService.getEdges,
   });
+
+  const { startNode, endNode } = useStores();
 
   if (isLoading) return <>Loading...</>;
   if (isError) return <>Error {(error as any)?.message ?? ""}!</>;
@@ -44,8 +40,8 @@ export default function Graph(props: IProps) {
     },
   }));
 
-  const startNodeIndex = nodeList.findIndex((n) => n.id == props.startNode);
-  const endNodeIndex = nodeList.findIndex((n) => n.id == props.endNode);
+  const startNodeIndex = nodeList.findIndex((n) => n.id == startNode);
+  const endNodeIndex = nodeList.findIndex((n) => n.id == endNode);
   if (nodeList.length != 0) {
     if (startNodeIndex !== -1)
       nodeList[startNodeIndex].color = {
@@ -66,13 +62,10 @@ export default function Graph(props: IProps) {
 
   return (
     <GraphInner
-      key={`${props.startNode}-${props.endNode}`}
+      key={`${startNode}-${endNode}`}
       nodes={nodeList}
       edges={edgeList}
       height={(innerHeight * 3) / 4}
-      setStartNode={props.setStartNode}
-      setEndNode={props.setEndNode}
-      selectedInput={props.selectedInput}
     />
   );
-}
+});

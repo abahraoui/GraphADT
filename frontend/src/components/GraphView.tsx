@@ -1,18 +1,18 @@
+import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { Edge, Node } from "vis-network";
+import { useStores } from "../helpers/useStores";
 import useVisNetwork from "../useVisNetwork";
 
 interface IProps {
   edges: Edge[];
   nodes: Node[];
   height: number;
-  setStartNode: (node: string | undefined) => void;
-  setEndNode: (node: string | undefined) => void;
-  selectedInput: "START" | "END" | undefined;
 }
 
-export default function GraphInner(props: IProps) {
+export default observer(function GraphInner(props: IProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { selectedInput, setProp } = useStores();
   const { ref, network } = useVisNetwork({
     options: { autoResize: true, height: `${props.height}px` },
     edges: props.edges,
@@ -23,8 +23,8 @@ export default function GraphInner(props: IProps) {
     if (isNaN(ctx.nodes[0])) return;
     const newNodeKey = `${ctx.nodes[0]}`;
 
-    if (props.selectedInput === "START") props.setStartNode(newNodeKey);
-    else if (props.selectedInput === "END") props.setEndNode(newNodeKey);
+    if (selectedInput === "START") setProp("startNode", newNodeKey);
+    else if (selectedInput === "END") setProp("endNode", newNodeKey);
   };
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function GraphInner(props: IProps) {
     return () => {
       network.off("click", onNodeClick);
     };
-  }, [network, props.selectedInput]);
+  }, [network, selectedInput]);
 
   return (
     <div className="h-full">
@@ -42,4 +42,4 @@ export default function GraphInner(props: IProps) {
       <div className={isLoading ? "" : "h-full"} ref={ref} />
     </div>
   );
-}
+});

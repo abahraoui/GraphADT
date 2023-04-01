@@ -1,33 +1,30 @@
-import { useState } from "react";
-import { ISelectedInput } from "../App";
+import { observer } from "mobx-react-lite";
+import { DIFFICULTIES } from "../helpers/constants";
+import { useStores } from "../helpers/useStores";
 
-const DIFFICULTIES = ["Easy", "Medium", "Hard", "Custom"];
+export default observer(function GraphSettings() {
+  const {
+    chosenDifficulty,
+    setProp,
+    selectedInput,
+    startNode,
+    endNode,
+    canStartGame,
+  } = useStores();
 
-interface IProps {
-  startNode?: string;
-  endNode?: string;
-  selectedInput: ISelectedInput;
-  setSelectedInput: (input: ISelectedInput) => void;
-}
+  const onPlay = () => {};
 
-export default function GraphSettings(props: IProps) {
-  const [chosenDifficulty, setChosenDifficulty] = useState<string>("Easy");
-
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setChosenDifficulty(e.target.value);
-  };
-
-  const isNodeSelectionDisables = chosenDifficulty !== "Custom";
+  const isNodeSelectionDisabled = chosenDifficulty !== "Custom";
 
   return (
-    <div className="shadow bg-neutral-100 m-4 rounded-lg">
-      <div className="flex h-full items-center gap-4 p-4 justify-between">
+    <div className="m-4 rounded-lg bg-neutral-100 shadow">
+      <div className="flex h-full items-center justify-between gap-4 p-4">
         <h1 className="text-4xl">The Graph Game</h1>
         <div className="flex items-center  gap-4">
           {DIFFICULTIES.map((diff, i) => (
             <div className="flex flex-row" key={i}>
               <input
-                onChange={changeHandler}
+                onChange={() => setProp("chosenDifficulty", diff)}
                 value={diff}
                 type="radio"
                 name="diff"
@@ -48,27 +45,32 @@ export default function GraphSettings(props: IProps) {
           <InputField
             title="Start node"
             id="startNodeInput"
-            onClick={() => props.setSelectedInput("START")}
-            disabled={isNodeSelectionDisables}
-            focused={props.selectedInput === "START"}
-            content={props.startNode || ""}
+            onClick={() => setProp("selectedInput", "START")}
+            disabled={isNodeSelectionDisabled}
+            focused={selectedInput === "START"}
+            content={startNode || ""}
           />
           <InputField
             title="End node"
             id="endNodeInput"
-            onClick={() => props.setSelectedInput("END")}
-            disabled={isNodeSelectionDisables}
-            focused={props.selectedInput === "END"}
-            content={props.endNode || ""}
+            onClick={() => setProp("selectedInput", "END")}
+            disabled={isNodeSelectionDisabled}
+            focused={selectedInput === "END"}
+            content={endNode || ""}
           />
         </div>
-        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow text-lg">
+        <button
+          className="rounded bg-green-500 py-2 px-4 text-lg font-bold text-white shadow transition-all
+          hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={onPlay}
+          disabled={!canStartGame}
+        >
           Play
         </button>
       </div>
     </div>
   );
-}
+});
 
 interface IInputProps {
   title: string;
@@ -81,7 +83,7 @@ interface IInputProps {
 
 function InputField(props: IInputProps) {
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex items-center gap-2">
       <label
         htmlFor={props.id}
         className="aria-disabled:text-gray-400"
@@ -90,10 +92,10 @@ function InputField(props: IInputProps) {
         {props.title}
       </label>
       <div
-        className="w-10 h-10 bg-gray-50 rounded border
-            aria-pressed:ring transition-all
-            aria-disabled:text-gray-400
-            flex items-center justify-center"
+        className="flex h-10 w-10 items-center justify-center
+            rounded border
+            bg-gray-50
+            transition-all aria-disabled:text-gray-400 aria-pressed:ring"
         aria-disabled={props.disabled}
         aria-pressed={!props.disabled && props.focused}
         onClick={props.onClick}
