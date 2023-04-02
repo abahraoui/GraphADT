@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Graph extends GraphADT {
+public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
 
     public Graph() {
         super();
@@ -17,7 +17,12 @@ public class Graph extends GraphADT {
         super(nodes);
 
     }
-
+    //TODO comment this please - maybe refactor and sub method it its too big
+    /**
+     *
+     * @param startNodeKey given the starting node, this function finds the shortest paths to all other nodes using the
+     *                     dijkstra algorithm
+     */
     public void findShortestPath(String startNodeKey) {
         if (startNodeKey == null)
             throw new NullPointerException("No start node is set");
@@ -38,7 +43,7 @@ public class Graph extends GraphADT {
             sptSet.put(outerNode.getKey(), true);
 
             this.getNodes().forEach(innerNode -> {
-                Integer edgeWeight = outerNode.getEdges().get(innerNode.getKey());
+                Double edgeWeight = outerNode.getEdges().get(innerNode.getKey());
                 Double outerNodeDistance = this.distances.get(outerNode.getKey());
                 Double innerNodeDistance = this.distances.get(innerNode.getKey());
                 if (!sptSet.get(innerNode.getKey()) &&
@@ -84,7 +89,13 @@ public class Graph extends GraphADT {
         this.pathsOfAll = pathOfAll;
     }
 
-
+    //TODO comment this please
+    /**
+     *
+     * @param distances this is a map to all the nodes from our starting node
+     * @param sptSet a boolean list, which becomes true if we have found the shortest path to that node
+     * @return we return the key of the node that is the closest to our currently examined node?
+     */
     private String minDistanceEntry(Map<String, Double> distances, Map<String, Boolean> sptSet) {
         Entry<String, Double> min = null;
         for (Entry<String, Double> entry : distances.entrySet())
@@ -106,7 +117,7 @@ public class Graph extends GraphADT {
                 if (matcher.matches()) {
                     String thisNodeKey = matcher.group(1);
                     String thatNodeKey = matcher.group(2);
-                    int edgeWeight = Integer.parseInt(matcher.group(3));
+                    Double edgeWeight = (double) Integer.parseInt(matcher.group(3));
 
                     Node node = null;
                     Node node2 = null;
@@ -142,6 +153,21 @@ public class Graph extends GraphADT {
         return true;
     }
 
-	
+    public void updateEdges() {
+        // ArrayList<EdgeDTO> edges = new ArrayList<>();
+        this.nodes.forEach(node -> {
+            Map<String, Double> currentEdges = node.getEdges();
+            currentEdges.forEach((currentTo, currentWeight) -> {
+                EdgeDTO currentEdge = new EdgeDTO(node.getKey(), currentTo, currentWeight);
+                if (!edges.contains(currentEdge)) edges.add(currentEdge);
+            });
+        });
+    }
+
+    public ArrayList<EdgeDTO> getEdges() {
+        // ArrayList<EdgeDTO> edges = new ArrayList<>();
+        updateEdges();
+        return edges;
+    }
 
 }

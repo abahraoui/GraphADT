@@ -1,163 +1,174 @@
 package Team19;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map.Entry;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
-
-public class Game {
+public class Game extends GameADT<String,Graph,String,String,Double> {
 	
 	public Game() {
         this.graph = new Graph();
     }
 	
-	enum Level {
-        EASY,
-        MEDIUM,
-        HARD
-    }
-	
 	final Integer MINPATHLENGTH = 2; // Minimum length of a path
 	
-	private Level difficulty;
-	
-	public Graph graph;
-	
-	private String startNodeKey;
-	private String endNodeKey;
 
-	public double correctLength;
-	public List<String> correctPath;
-	
-	public Integer amountOfGuesses = 0;
-	public Integer userPlayTime = 0;
-
-public void setStartNodeKey(String startingNode) {
-    this.startNodeKey = startingNode;
-    updateCorrectLength();
-}
-
-public void setRandomStartNode() {
-    this.startNodeKey = Integer.toString((int) Math.floor(Math.random() * (graph.getNodes().size() + 1) + 0));
-    updateCorrectLength();
-}
-
-public String getStartNodeKey() {
-    return startNodeKey;
-}
-
-public void setEndNodeKey(String endingNode) {
-    this.endNodeKey = endingNode;
-    this.updateCorrectLength();
-}
-
-public void setDifficulty(String diff){
-    switch (diff) {
-        case "easy":
-            difficulty = Level.EASY;
-            break;
-        case "medium":
-            difficulty = Level.MEDIUM;
-            break;
-        default:
-            difficulty = Level.HARD;
-            break;
+    public String createGraph(String start_node,  String end_node,  String difficulty) {
+        String startNode = (start_node != null) ? start_node : this.generateRandomStartNode();
+        String endNode = (end_node != null) ? end_node : this.generateRandomEndNode();
+        //TODO choose between block 1 or block 2
+        //Start Block 1 (my fav)
+        if (difficulty != null) {this.setDifficulty(difficulty.toLowerCase());} else {this.setDifficulty("easy");};
+        //End Block 1
+        //Start Block 2 
+        String diff = (difficulty != null) ? difficulty.toLowerCase() : "easy";
+        this.setDifficulty(diff);
+        //End Block 2
+        return createGraph(startNode, endNode);
     }
 
-}
-
-public void setRandomEndNode() {
-    this.findShortestPathBasedOnDiff();
-/*        this.endNodeKey = Integer.toString((int) Math.floor(Math.random() *(this.nodes.size()+ 1) + 0));
-    if(this.endNodeKey == this.startNodeKey) {
-        this.setRandomEndNode();
-    }*/
-    updateCorrectLength();
-    System.out.println(correctPath);
-    System.out.println(correctLength);
-
-}
-
-public Integer calculateScore(Integer userPlayTime, Integer amountOfGuesses) {
-    userPlayTime = Math.toIntExact(System.nanoTime() * (10 ^ 9)) - userPlayTime;
-    switch (this.difficulty) {
-        case EASY:
-            return (750 * ((10 / amountOfGuesses) / userPlayTime));
-
-        case MEDIUM:
-            return (1500 * ((10 / amountOfGuesses) / userPlayTime));
-
-        case HARD:
-            return (3000 * ((10 / amountOfGuesses) / userPlayTime));
+    public String createGraph(String start_node, String end_node) {
+        this.setStartNodeKey(start_node);
+        this.setEndNodeKey(end_node);
+        amountOfGuesses = 0;
+        JsonArray edgesJson = new JsonArray();
+        ArrayList<EdgeDTO> edges = this.graph.getEdges();
+        edges.forEach(edge -> {
+            JsonObject edgeJson = new JsonObject();
+            edgeJson.addProperty("from", edge.from);
+            edgeJson.addProperty("to", edge.to);
+            edgeJson.addProperty("weight", edge.weight);
+            edgesJson.add(edgeJson);
+        });
+        JsonObject response = new JsonObject();
+        this.userPlayTime = System.nanoTime()/(10^9);
+        response.addProperty("startNodeKey", this.getStartNodeKey());
+        response.addProperty("endNodeKey",this.getEndNodeKey());
+        response.add("edges", edgesJson);
+        return new Gson().toJson(response);
     }
 
-    return null; // if calculateScore returns null, it means that a difficulty has not been set/passed through
-}
-public String getEndNodeKey() {
-    return endNodeKey;
-}
 
-private void updateCorrectLength() {
-    if (this.getStartNodeKey() != null && this.getEndNodeKey() != null) {
-        graph.findShortestPath(this.getStartNodeKey());
-        this.correctLength = graph.distances.get(this.getEndNodeKey());
+    public String generateRandomStartNode() {
+        return Integer.toString((int) Math.floor(Math.random() * (graph.getNodes().size() + 1) + 0));
     }
-}
 
-public String checkGuess(int playerGuess) {
-    this.amountOfGuesses += 1;
-    if (playerGuess > correctLength)
-        return "LOWER";
-    if (playerGuess < correctLength)
-        return "HIGHER";
-    return "CORRECT";
-}
-public void findShortestPathBasedOnDiff() {
-    graph.findShortestPath(this.getStartNodeKey());
-    Integer max = 2;
-
-    for (ArrayList<String> list : graph.pathsOfAll.values()) {
-        if (list.size() > max)
-            max = list.size();
+    public String generateRandomEndNode() {
+        return this.pathLengthByDiff();
     }
-    System.out.println("Path with max hops: " + max);
 
-    Integer skillDifference = (max - MINPATHLENGTH) % 3;
-
-    Integer skillDifferenceRandomized = (int) (Math.random() * skillDifference);
-
-    switch (this.difficulty) {
-        case EASY:
-            this.setEndNodeKey(pickEndNodeBasedOnDiff(MINPATHLENGTH + skillDifferenceRandomized));
-            break;
-        case MEDIUM:
-            this.setEndNodeKey(pickEndNodeBasedOnDiff(skillDifference + MINPATHLENGTH + skillDifferenceRandomized));
-            break;
-        case HARD:
-            this.setEndNodeKey(
-                    pickEndNodeBasedOnDiff((skillDifference * 2) + MINPATHLENGTH + skillDifferenceRandomized));
-            break;
-    }
-}
-
-private String pickEndNodeBasedOnDiff(int skillIssue) {
-    String randomlyPickedEndNote = null;
-    for (Entry<String, ArrayList<String>> e : graph.pathsOfAll.entrySet()) {
-        if (e.getValue().size() == skillIssue) {
-            if (randomlyPickedEndNote == null) {
-                randomlyPickedEndNote = e.getKey();
-            } else {
-                if (Math.random() > 0.5) {
-                    randomlyPickedEndNote = e.getKey();
-                }
-            }
+    public void setDifficulty(String diff){
+        switch (diff) {
+            case "hard":
+                difficulty = Level.HARD;
+                break;
+            case "medium":
+                difficulty = Level.MEDIUM;
+                break;
+            default:
+                difficulty = Level.EASY;
+                break;
         }
     }
 
-    this.correctPath = graph.pathsOfAll.get(randomlyPickedEndNote);
+    //TODO comment this please
+    /**
+     * userPlayTime we initialise this parameter with the time the user starts playing the game,
+     * then we substract the time the user has found the correct path length.
+     * @return using userPlayTime and amountOfGuesses we calculate the score, giving different initial scores based on
+     * the difficulty.
+     */
+    public long calculateScore(long userPlayTime, Integer amountOfGuesses) {
+        userPlayTime = System.nanoTime() / (10 ^ 9) - userPlayTime;
+        switch (this.difficulty) {
+            case HARD:
+                return (3000 * ((10 / amountOfGuesses) / userPlayTime));    
+            case MEDIUM:
+                return (1500 * ((10 / amountOfGuesses) / userPlayTime));
+            default: //custom difficulty is rewarded the same as easy
+                return (750 * ((10 / amountOfGuesses) / userPlayTime));
+        }
+    }
 
-    return randomlyPickedEndNote;
-}
+    public void updateCorrectLength() {
+        if (this.getStartNodeKey() != null && this.getEndNodeKey() != null) {
+            graph.findShortestPath(this.getStartNodeKey());
+            this.correctLength = graph.distances.get(this.getEndNodeKey());
+        }
+    }
+
+    public String checkGuess(Double playerGuess) {
+        this.amountOfGuesses += 1;
+        if (playerGuess > correctLength)
+            return "LOWER";
+        if (playerGuess < correctLength)
+            return "HIGHER";
+        // Integer score = this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
+        return "CORRECT your score was "+this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
+    }
+
+    //TODO comment this please
+
+    /**
+     *
+     * @return Picks a random end node within the range of our difficulty calculation
+     */
+    public String pathLengthByDiff() {
+        graph.findShortestPath(this.getStartNodeKey());
+        Integer max = 2;
+
+        for (ArrayList<String> list : graph.pathsOfAll.values()) {
+            if (list.size() > max)
+                max = list.size();
+        }
+        System.out.println("Path with max hops: " + max);
+
+        Integer difficultyIncrease = (max - MINPATHLENGTH) % 3;
+
+        Integer difficultyIncreaseRandomized = (int) (Math.random() * difficultyIncrease);
+        
+        difficultyIncreaseRandomized += MINPATHLENGTH;
+
+        switch (this.difficulty) {
+            case HARD:
+                difficultyFactor = (difficultyIncrease * 2) + difficultyIncreaseRandomized;
+
+            case MEDIUM:
+                difficultyFactor = (difficultyIncrease * 1) + difficultyIncreaseRandomized;
+
+            default:
+                difficultyFactor = (difficultyIncrease * 0) + difficultyIncreaseRandomized;
+
+        }
+    }
+
+    //TODO comment this please
+
+    /**
+     *
+     * difficultyFactor is a randomized number given by the pathLengthByDiff() function.
+     *
+     * @return we return the number of the pick node, which has a path length equal to difficultyFactor.
+     *  
+     */
+    public String pickEndNodeBasedOnDiff() {
+        String randomlyPickedEndNote = null;
+        for (Entry<String, ArrayList<String>> e : graph.pathsOfAll.entrySet()) {
+            if (e.getValue().size() == this.difficultyFactor) {
+                if (randomlyPickedEndNote == null) {
+                    randomlyPickedEndNote = e.getKey();
+                } else {
+                    if (Math.random() > 0.5) {
+                        randomlyPickedEndNote = e.getKey();
+                    }
+                }
+            }
+        }
+        this.correctPath = graph.pathsOfAll.get(randomlyPickedEndNote);
+        return randomlyPickedEndNote;
+    }
 }
 
 
