@@ -41,7 +41,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
             edgesJson.add(edgeJson);
         });
         JsonObject response = new JsonObject();
-        this.userPlayTime = System.nanoTime()/(10^9);
+        this.userPlayTime = System.currentTimeMillis();
         response.addProperty("startNodeKey", this.getStartNodeKey());
         response.addProperty("endNodeKey",this.getEndNodeKey());
         response.add("edges", edgesJson);
@@ -79,14 +79,22 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
      * the difficulty.
      */
     public Long calculateScore() {
-        userPlayTime = System.nanoTime() / (10 ^ 9) - userPlayTime;
+        System.out.println(userPlayTime);
+        System.out.println(System.currentTimeMillis());
+        Long timetaken = System.currentTimeMillis() - userPlayTime;
+        System.out.println(userPlayTime);
+        System.out.println(this.amountOfGuesses);
+        System.out.println((10 / this.amountOfGuesses));    
+        System.out.println(((10 / this.amountOfGuesses) / userPlayTime));    
+        System.out.println(750 * ((10 / this.amountOfGuesses) / userPlayTime));    
         switch (this.difficulty) {
             case HARD:
-                return (3000 * ((10 / this.amountOfGuesses) / userPlayTime));    
+                // return (3000 * ((10 / 1) / 845186200));    
+                return ((3000 * (10 / this.amountOfGuesses)) / (timetaken/1000));    
             case MEDIUM:
-                return (1500 * ((10 / this.amountOfGuesses) / userPlayTime));
+                return ((1500 * (10 / this.amountOfGuesses)) / (timetaken/1000));
             default: //custom difficulty is rewarded the same as easy
-                return (750 * ((10 / this.amountOfGuesses) / userPlayTime));
+                return ((750 * (10 / this.amountOfGuesses)) / (timetaken/1000));
         }
     }
 
