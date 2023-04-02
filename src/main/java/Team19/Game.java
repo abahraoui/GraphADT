@@ -6,7 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.Gson;
 
-public class Game extends GameADT<String,Graph,String,String,Double> {
+public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 	
 	public Game() {
         this.graph = new Graph();
@@ -16,18 +16,16 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
 	
 
     public String createGraph(String start_node,  String end_node,  String difficulty) {
-        String startNode = (start_node != null) ? start_node : this.generateRandomStartNode();
-        String endNode = (end_node != null) ? end_node : this.generateRandomEndNode();
-        //TODO choose between block 1 or block 2
-        //Start Block 1 (my fav)
-        if (difficulty != null) {this.setDifficulty(difficulty.toLowerCase());} else {this.setDifficulty("easy");};
-        //End Block 1
-        //Start Block 2 
         String diff = (difficulty != null) ? difficulty.toLowerCase() : "easy";
         this.setDifficulty(diff);
-        //End Block 2
+
+        String startNode = (start_node != null) ? start_node : this.generateStartNodeBasedOnDifficulty();
+        this.setStartNodeKey(startNode);
+        String endNode = (end_node != null) ? end_node : this.generateEndNodeBasedOnDifficulty();
+
         return createGraph(startNode, endNode);
     }
+
 
     public String createGraph(String start_node, String end_node) {
         this.setStartNodeKey(start_node);
@@ -51,11 +49,11 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
     }
 
 
-    public String generateRandomStartNode() {
+    public String generateStartNodeBasedOnDifficulty() {
         return Integer.toString((int) Math.floor(Math.random() * (graph.getNodes().size() + 1) + 0));
     }
 
-    public String generateRandomEndNode() {
+    public String generateEndNodeBasedOnDifficulty() {
         return this.pathLengthByDiff();
     }
 
@@ -80,15 +78,15 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
      * @return using userPlayTime and amountOfGuesses we calculate the score, giving different initial scores based on
      * the difficulty.
      */
-    public long calculateScore(long userPlayTime, Integer amountOfGuesses) {
+    public Long calculateScore() {
         userPlayTime = System.nanoTime() / (10 ^ 9) - userPlayTime;
         switch (this.difficulty) {
             case HARD:
-                return (3000 * ((10 / amountOfGuesses) / userPlayTime));    
+                return (3000 * ((10 / this.amountOfGuesses) / userPlayTime));    
             case MEDIUM:
-                return (1500 * ((10 / amountOfGuesses) / userPlayTime));
+                return (1500 * ((10 / this.amountOfGuesses) / userPlayTime));
             default: //custom difficulty is rewarded the same as easy
-                return (750 * ((10 / amountOfGuesses) / userPlayTime));
+                return (750 * ((10 / this.amountOfGuesses) / userPlayTime));
         }
     }
 
@@ -106,7 +104,7 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
         if (playerGuess < correctLength)
             return "HIGHER";
         // Integer score = this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
-        return "CORRECT your score was "+this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
+        return "CORRECT your score was "+this.calculateScore();
     }
 
     //TODO comment this please
@@ -133,15 +131,16 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
 
         switch (this.difficulty) {
             case HARD:
-                difficultyFactor = (difficultyIncrease * 2) + difficultyIncreaseRandomized;
+                this.difficultyFactor = (difficultyIncrease * 2) + difficultyIncreaseRandomized;
 
             case MEDIUM:
-                difficultyFactor = (difficultyIncrease * 1) + difficultyIncreaseRandomized;
+                this.difficultyFactor = (difficultyIncrease * 1) + difficultyIncreaseRandomized;
 
             default:
-                difficultyFactor = (difficultyIncrease * 0) + difficultyIncreaseRandomized;
+                this.difficultyFactor = (difficultyIncrease * 0) + difficultyIncreaseRandomized;
 
         }
+        return pickEndNodeBasedOnDiff();
     }
 
     //TODO comment this please
