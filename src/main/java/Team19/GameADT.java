@@ -30,7 +30,7 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT> 
 
     public abstract String createGraph(NodeKey start_node,  NodeKey end_node,  DifficultyInputT difficulty); 
 
-    //TODO reconisder if we need to update correct lenght after resetting the start (really; it is good practice but technically futile with our functionality offered to the user
+    //TODO reconisder if we need to update correct length after resetting the start (really; it is good practice but technically futile with our functionality offered to the user
     public void setStartNodeKey(NodeKey startingNode) {
         this.startNodeKey = startingNode;
         updateCorrectLength();
@@ -65,7 +65,4 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT> 
 
     public abstract FeedbackT checkGuess(GuessT playerGuess);
 
-    public abstract NodeKey findShortestPathBasedOnDiff();
-
-    public abstract NodeKey pickEndNodeBasedOnDiff(int PathLengthBasedOnDiff);
 }
