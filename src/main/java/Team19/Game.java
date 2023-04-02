@@ -6,7 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.Gson;
 
-public class Game extends GameADT<String,Graph,String,String,Double> {
+public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 	
 	public Game() {
         this.graph = new Graph();
@@ -80,15 +80,15 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
      * @return using userPlayTime and amountOfGuesses we calculate the score, giving different initial scores based on
      * the difficulty.
      */
-    public long calculateScore(long userPlayTime, Integer amountOfGuesses) {
+    public Long calculateScore() {
         userPlayTime = System.nanoTime() / (10 ^ 9) - userPlayTime;
         switch (this.difficulty) {
             case HARD:
-                return (3000 * ((10 / amountOfGuesses) / userPlayTime));    
+                return (3000 * ((10 / this.amountOfGuesses) / userPlayTime));    
             case MEDIUM:
-                return (1500 * ((10 / amountOfGuesses) / userPlayTime));
+                return (1500 * ((10 / this.amountOfGuesses) / userPlayTime));
             default: //custom difficulty is rewarded the same as easy
-                return (750 * ((10 / amountOfGuesses) / userPlayTime));
+                return (750 * ((10 / this.amountOfGuesses) / userPlayTime));
         }
     }
 
@@ -106,7 +106,7 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
         if (playerGuess < correctLength)
             return "HIGHER";
         // Integer score = this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
-        return "CORRECT your score was "+this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
+        return "CORRECT your score was "+this.calculateScore();
     }
 
     //TODO comment this please
@@ -142,6 +142,7 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
                 difficultyFactor = (difficultyIncrease * 0) + difficultyIncreaseRandomized;
 
         }
+        return pickEndNodeBasedOnDiff();
     }
 
     //TODO comment this please

@@ -1,6 +1,6 @@
 package Team19;
 
-public interface IGameDifficulty<NodeKey,DifficultyInputT> {
+public interface IGameDifficulty<NodeKey,DifficultyInputT,ScoreT> {
     NodeKey generateRandomStartNode();
 
     NodeKey generateRandomEndNode();

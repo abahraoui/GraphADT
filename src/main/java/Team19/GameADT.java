@@ -2,7 +2,7 @@ package Team19;
 
 import java.util.List;
 
-public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT> implements IGameBase<NodeKey,FeedbackT,GuessT>,IGameDifficulty<NodeKey,DifficultyInputT> {
+public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT,ScoreT> implements IGameBase<NodeKey,FeedbackT,GuessT>,IGameDifficulty<NodeKey,DifficultyInputT,ScoreT> {
 
     
 
@@ -15,6 +15,7 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT> 
 	protected Integer MINPATHLENGTH; // Minimum length of a path
 	
 	protected Level difficulty;
+	protected Integer difficultyFactor;
 	
 	public GraphT graph;
 	
@@ -59,7 +60,7 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT> 
 
     public abstract NodeKey generateRandomEndNode();
 
-    public abstract long calculateScore(long userPlayTime, Integer amountOfGuesses);
+    public abstract ScoreT calculateScore();
 
     public abstract void updateCorrectLength();
 
