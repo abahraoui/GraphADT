@@ -6,7 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.Gson;
 
-public class Game extends GameADT<String,Graph,String,String,Double> {
+public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 	
 	public Game() {
         this.graph = new Graph();
@@ -15,17 +15,15 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
 	final Integer MINPATHLENGTH = 2; // Minimum length of a path
 	
 
+
     public String createGraph(String start_node,  String end_node,  String difficulty) {
-        String startNode = (start_node != null) ? start_node : this.generateRandomStartNode();
-        String endNode = (end_node != null) ? end_node : this.generateRandomEndNode();
-        //TODO choose between block 1 or block 2
-        //Start Block 1 (my fav)
-        if (difficulty != null) {this.setDifficulty(difficulty.toLowerCase());} else {this.setDifficulty("easy");};
-        //End Block 1
-        //Start Block 2 
         String diff = (difficulty != null) ? difficulty.toLowerCase() : "easy";
         this.setDifficulty(diff);
-        //End Block 2
+
+        String startNode = (start_node != null) ? start_node : this.generateStartNodeBasedOnDifficulty();
+        this.setStartNodeKey(startNode);
+        String endNode = (end_node != null) ? end_node : this.generateEndNodeBasedOnDifficulty();
+
         return createGraph(startNode, endNode);
     }
 
@@ -51,11 +49,11 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
     }
 
 
-    public String generateRandomStartNode() {
+    public String generateStartNodeBasedOnDifficulty() {
         return Integer.toString((int) Math.floor(Math.random() * (graph.getNodes().size() + 1) + 0));
     }
 
-    public String generateRandomEndNode() {
+    public String generateEndNodeBasedOnDifficulty() {
         return this.findShortestPathBasedOnDiff();
     }
 
@@ -76,19 +74,17 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
     //TODO comment this please
     /**
      *
-     * @param userPlayTime
-     * @param amountOfGuesses
      * @return
      */
-    public long calculateScore(long userPlayTime, Integer amountOfGuesses) {
+    public Long calculateScore() {
         userPlayTime = System.nanoTime() / (10 ^ 9) - userPlayTime;
         switch (this.difficulty) {
             case HARD:
-                return (3000 * ((10 / amountOfGuesses) / userPlayTime));    
+                return (3000 * ((10 / this.amountOfGuesses) / userPlayTime));    
             case MEDIUM:
-                return (1500 * ((10 / amountOfGuesses) / userPlayTime));
+                return (1500 * ((10 / this.amountOfGuesses) / userPlayTime));
             default: //custom difficulty is rewarded the same as easy
-                return (750 * ((10 / amountOfGuesses) / userPlayTime));
+                return (750 * ((10 / this.amountOfGuesses) / userPlayTime));
         }
     }
 
@@ -106,7 +102,7 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
         if (playerGuess < correctLength)
             return "HIGHER";
         // Integer score = this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
-        return "CORRECT your score was "+this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
+        return "CORRECT your score was " + this.calculateScore();
     }
 
     //TODO comment this please
@@ -125,19 +121,19 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
         }
         System.out.println("Path with max hops: " + max);
 
-        Integer skillDifference = (max - MINPATHLENGTH) % 3;
+        Integer difficultyIncrease = (max - MINPATHLENGTH) % 3;
 
-        Integer skillDifferenceRandomized = (int) (Math.random() * skillDifference);
+        Integer difficultyIncreaseRandomized = (int) (Math.random() * difficultyIncrease);
 
         switch (this.difficulty) {
             case HARD:
-                return pickEndNodeBasedOnDiff((skillDifference * 2) + MINPATHLENGTH + skillDifferenceRandomized);
+                return pickEndNodeBasedOnDiff((difficultyIncrease * 2) + MINPATHLENGTH + difficultyIncreaseRandomized);
                 
             case MEDIUM:
-                return pickEndNodeBasedOnDiff(skillDifference + MINPATHLENGTH + skillDifferenceRandomized);
+                return pickEndNodeBasedOnDiff((difficultyIncrease * 1) + MINPATHLENGTH + difficultyIncreaseRandomized);
                 
             default:
-                return pickEndNodeBasedOnDiff(MINPATHLENGTH + skillDifferenceRandomized);
+                return pickEndNodeBasedOnDiff((difficultyIncrease * 0) + MINPATHLENGTH + difficultyIncreaseRandomized);
                 
         }
     }

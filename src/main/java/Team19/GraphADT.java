@@ -6,7 +6,6 @@ import java.util.*;
 
 abstract class GraphADT<NodeKey,NodeWeight,EdgeInterface,NodeInterface> {
     
-
     protected ArrayList<NodeInterface> nodes;
     protected ArrayList<EdgeInterface> edges;
 

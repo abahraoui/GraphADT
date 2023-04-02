@@ -2,7 +2,7 @@ package Team19;
 
 import java.util.List;
 
-public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT> implements IGameBase<NodeKey,FeedbackT,GuessT>,IGameDifficulty<NodeKey,DifficultyInputT> {
+public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT,ScoreT> implements IGameBase<NodeKey,FeedbackT,GuessT>,IGameDifficulty<NodeKey,DifficultyInputT,ScoreT> {
 
     
 
@@ -55,17 +55,13 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT> 
 
     public abstract void setDifficulty(DifficultyInputT diff);
 
-    public abstract NodeKey generateRandomStartNode();
+    public abstract NodeKey generateStartNodeBasedOnDifficulty();
 
-    public abstract NodeKey generateRandomEndNode();
+    public abstract NodeKey generateEndNodeBasedOnDifficulty();
 
-    public abstract long calculateScore(long userPlayTime, Integer amountOfGuesses);
+    public abstract ScoreT calculateScore();
 
     public abstract void updateCorrectLength();
 
     public abstract FeedbackT checkGuess(GuessT playerGuess);
-
-    public abstract NodeKey findShortestPathBasedOnDiff();
-
-    public abstract NodeKey pickEndNodeBasedOnDiff(int PathLengthBasedOnDiff);
 }

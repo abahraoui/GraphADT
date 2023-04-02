@@ -1,15 +1,13 @@
 package Team19;
 
-public interface IGameDifficulty<NodeKey,DifficultyInputT> {
-    NodeKey generateRandomStartNode();
+public interface IGameDifficulty<NodeKey,DifficultyInputT,ScoreT> {
+    
+    NodeKey generateStartNodeBasedOnDifficulty();
 
-    NodeKey generateRandomEndNode();
+    NodeKey generateEndNodeBasedOnDifficulty();
 
     void setDifficulty(DifficultyInputT diff);
 
-    long calculateScore(long userPlayTime, Integer amountOfGuesses);
+    ScoreT calculateScore();
 
-    NodeKey findShortestPathBasedOnDiff();
-
-    NodeKey pickEndNodeBasedOnDiff(int PathLengthBasedOnDiff);
 }

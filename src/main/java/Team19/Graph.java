@@ -106,7 +106,6 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
    
 
     // 0 36 {'weight': 9}
-    @Override
     public boolean parseInput(ArrayList<String> lines) {
         final String parseRegex = "(\\d*) (\\d*) \\{'weight': (\\d*)}";
         Pattern pattern = Pattern.compile(parseRegex);
