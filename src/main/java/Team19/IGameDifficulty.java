@@ -1,9 +1,9 @@
 package Team19;
 
 public interface IGameDifficulty<NodeKey,DifficultyInputT,ScoreT> {
-    NodeKey generateRandomStartNode();
+    NodeKey generateStartNodeBasedOnDifficulty();
 
-    NodeKey generateRandomEndNode();
+    NodeKey generateEndNodeBasedOnDifficulty();
 
     void setDifficulty(DifficultyInputT diff);
 

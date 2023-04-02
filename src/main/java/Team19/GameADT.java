@@ -56,9 +56,9 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT,S
 
     public abstract void setDifficulty(DifficultyInputT diff);
 
-    public abstract NodeKey generateRandomStartNode();
+    public abstract NodeKey generateStartNodeBasedOnDifficulty();
 
-    public abstract NodeKey generateRandomEndNode();
+    public abstract NodeKey generateEndNodeBasedOnDifficulty();
 
     public abstract ScoreT calculateScore();
 
