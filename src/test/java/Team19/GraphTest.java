@@ -36,14 +36,14 @@ public class GraphTest {
 
     @Test
     public void testRandomKeys() {
-        game.setRandomStartNode();
+        game.setStartNodeKey(game.generateRandomStartNode());
         assertNotNull(game.getStartNodeKey());
         game.setDifficulty("easy");
-        game.setRandomEndNode();
+        game.setEndNodeKey(game.generateRandomEndNode());
         game.setDifficulty("medium");
-        game.setRandomEndNode();
+        game.setEndNodeKey(game.generateRandomEndNode());
         game.setDifficulty("hard");
-        game.setRandomEndNode();
+        game.setEndNodeKey(game.generateRandomEndNode());
         assertNotNull(game.getEndNodeKey());
     }
 
@@ -51,7 +51,7 @@ public class GraphTest {
     public void testCheckGuess() {
         game.setStartNodeKey("0");
         game.setEndNodeKey("10");
-       // assertTrue(graph.checkGuess(graph.correctLength), ((int) graph.correctLength));
+    //    assertTrue(graph.checkGuess(graph.correctLength), ((int) graph.correctLength));
     }
 
     @Test

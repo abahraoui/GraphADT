@@ -1,14 +1,9 @@
 package Team19;
 
-public class EdgeDTO {
-    public String from;
-    public String to;
-    public int weight;
+public class EdgeDTO extends EdgeADT<String,Double> {
 
-    public EdgeDTO(String from, String to, int weight) {
-        this.from = from;
-        this.to = to;
-        this.weight = weight;
+    public EdgeDTO(String from, String to, Double weight) {
+        super(from, to, weight);
     }
 
     @Override
