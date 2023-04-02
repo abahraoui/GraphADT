@@ -7,9 +7,5 @@ public interface IGameDifficulty<NodeKey,DifficultyInputT> {
 
     void setDifficulty(DifficultyInputT diff);
 
-    long calculateScore(long userPlayTime, Integer amountOfGuesses);
-
-    NodeKey findShortestPathBasedOnDiff();
-
-    NodeKey pickEndNodeBasedOnDiff(int PathLengthBasedOnDiff);
+    ScoreT calculateScore();
 }

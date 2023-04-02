@@ -56,7 +56,7 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
     }
 
     public String generateRandomEndNode() {
-        return this.findShortestPathBasedOnDiff();
+        return this.pathLengthByDiff();
     }
 
     public void setDifficulty(String diff){
@@ -75,10 +75,10 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
 
     //TODO comment this please
     /**
-     *
-     * @param userPlayTime
-     * @param amountOfGuesses
-     * @return
+     * userPlayTime we initialise this parameter with the time the user starts playing the game,
+     * then we substract the time the user has found the correct path length.
+     * @return using userPlayTime and amountOfGuesses we calculate the score, giving different initial scores based on
+     * the difficulty.
      */
     public long calculateScore(long userPlayTime, Integer amountOfGuesses) {
         userPlayTime = System.nanoTime() / (10 ^ 9) - userPlayTime;
@@ -113,9 +113,9 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
 
     /**
      *
-     * @return
+     * @return Picks a random end node within the range of our difficulty calculation
      */
-    public String findShortestPathBasedOnDiff() {
+    public String pathLengthByDiff() {
         graph.findShortestPath(this.getStartNodeKey());
         Integer max = 2;
 
@@ -125,20 +125,22 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
         }
         System.out.println("Path with max hops: " + max);
 
-        Integer skillDifference = (max - MINPATHLENGTH) % 3;
+        Integer difficultyIncrease = (max - MINPATHLENGTH) % 3;
 
-        Integer skillDifferenceRandomized = (int) (Math.random() * skillDifference);
+        Integer difficultyIncreaseRandomized = (int) (Math.random() * difficultyIncrease);
+        
+        difficultyIncreaseRandomized += MINPATHLENGTH;
 
         switch (this.difficulty) {
             case HARD:
-                return pickEndNodeBasedOnDiff((skillDifference * 2) + MINPATHLENGTH + skillDifferenceRandomized);
-                
+                difficultyFactor = (difficultyIncrease * 2) + difficultyIncreaseRandomized;
+
             case MEDIUM:
-                return pickEndNodeBasedOnDiff(skillDifference + MINPATHLENGTH + skillDifferenceRandomized);
-                
+                difficultyFactor = (difficultyIncrease * 1) + difficultyIncreaseRandomized;
+
             default:
-                return pickEndNodeBasedOnDiff(MINPATHLENGTH + skillDifferenceRandomized);
-                
+                difficultyFactor = (difficultyIncrease * 0) + difficultyIncreaseRandomized;
+
         }
     }
 
@@ -146,13 +148,15 @@ public class Game extends GameADT<String,Graph,String,String,Double> {
 
     /**
      *
-     * @param PathLengthBasedOnDiff
-     * @return
+     * difficultyFactor is a randomized number given by the pathLengthByDiff() function.
+     *
+     * @return we return the number of the pick node, which has a path length equal to difficultyFactor.
+     *  
      */
-    public String pickEndNodeBasedOnDiff(int PathLengthBasedOnDiff) {
+    public String pickEndNodeBasedOnDiff() {
         String randomlyPickedEndNote = null;
         for (Entry<String, ArrayList<String>> e : graph.pathsOfAll.entrySet()) {
-            if (e.getValue().size() == PathLengthBasedOnDiff) {
+            if (e.getValue().size() == this.difficultyFactor) {
                 if (randomlyPickedEndNote == null) {
                     randomlyPickedEndNote = e.getKey();
                 } else {

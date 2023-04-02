@@ -20,7 +20,8 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
     //TODO comment this please - maybe refactor and sub method it its too big
     /**
      *
-     * @param startNodeKey
+     * @param startNodeKey given the starting node, this function finds the shortest paths to all other nodes using the
+     *                     dijkstra algorithm
      */
     public void findShortestPath(String startNodeKey) {
         if (startNodeKey == null)
@@ -91,9 +92,9 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
     //TODO comment this please
     /**
      *
-     * @param distances
-     * @param sptSet
-     * @return
+     * @param distances this is a map to all the nodes from our starting node
+     * @param sptSet a boolean list, which becomes true if we have found the shortest path to that node
+     * @return we return the key of the node that is the closest to our currently examined node?
      */
     private String minDistanceEntry(Map<String, Double> distances, Map<String, Boolean> sptSet) {
         Entry<String, Double> min = null;
