@@ -15,6 +15,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 	final Integer MINPATHLENGTH = 2; // Minimum length of a path
 	
 
+
     public String createGraph(String start_node,  String end_node,  String difficulty) {
         String diff = (difficulty != null) ? difficulty.toLowerCase() : "easy";
         this.setDifficulty(diff);
@@ -55,6 +56,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 
     public String generateEndNodeBasedOnDifficulty() {
         return this.pathLengthByDiff();
+
     }
 
     public void setDifficulty(String diff){
@@ -79,14 +81,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
      * the difficulty.
      */
     public Long calculateScore() {
-        System.out.println(userPlayTime);
-        System.out.println(System.currentTimeMillis());
         Long timetaken = System.currentTimeMillis() - userPlayTime;
-        System.out.println(userPlayTime);
-        System.out.println(this.amountOfGuesses);
-        System.out.println((10 / this.amountOfGuesses));    
-        System.out.println(((10 / this.amountOfGuesses) / userPlayTime));    
-        System.out.println(750 * ((10 / this.amountOfGuesses) / userPlayTime));    
         switch (this.difficulty) {
             case HARD:
                 // return (3000 * ((10 / 1) / 845186200));    
@@ -112,7 +107,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
         if (playerGuess < correctLength)
             return "HIGHER";
         // Integer score = this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
-        return "CORRECT your score was "+this.calculateScore();
+        return "CORRECT your score was " + this.calculateScore();
     }
 
     //TODO comment this please

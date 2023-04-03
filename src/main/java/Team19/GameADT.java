@@ -65,5 +65,4 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT,S
     public abstract void updateCorrectLength();
 
     public abstract FeedbackT checkGuess(GuessT playerGuess);
-
 }
