@@ -13,20 +13,20 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT,S
     }
 	
 	protected Integer MINPATHLENGTH; // Minimum length of a path
-	
-	protected Level difficulty;
-	protected Integer difficultyFactor;
-	
-	public GraphT graph;
-	
-	protected NodeKey startNodeKey;
-	protected NodeKey endNodeKey;
 
-	public GuessT correctLength;
+    protected Level difficulty;
+    protected Integer difficultyFactor;
+
+    public GraphT graph;
+
+    protected NodeKey startNodeKey;
+    protected NodeKey endNodeKey;
+
+    public GuessT correctLength;
     protected  List<String> correctPath;
-	
-	public Integer amountOfGuesses = 0;
-	public long userPlayTime = 0;
+
+    public Integer amountOfGuesses = 0;
+    public long userPlayTime = 0;
 
 
     public abstract String createGraph(NodeKey start_node,  NodeKey end_node,  DifficultyInputT difficulty); 

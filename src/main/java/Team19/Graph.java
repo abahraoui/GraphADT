@@ -17,6 +17,12 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
         super(nodes);
 
     }
+
+    public Double pathFindingAlgorithim(String startNodeKey,String endNodeKey){
+        this.findShortestPath(startNodeKey);
+        return distances.get(endNodeKey);
+    }
+    
     //TODO comment this please - maybe refactor and sub method it its too big
     /**
      *
@@ -135,12 +141,12 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
 
                     if (node == null) {
                         node = new Node(thisNodeKey);
-                        this.getNodes().add(node);
+                        addNode(node);
                         node.addEdge(thatNodeKey, edgeWeight);
                     }
                     if (node2 == null) {
                         node2 = new Node(thatNodeKey);
-                        this.getNodes().add(node2);
+                        addNode(node2);
                         node2.addEdge(thisNodeKey, edgeWeight);
                     }
 

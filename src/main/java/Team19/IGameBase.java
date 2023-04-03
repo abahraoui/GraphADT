@@ -11,7 +11,5 @@ public interface IGameBase<NodeKey,FeedbackT,GuessT> {
 
     NodeKey getEndNodeKey();
 
-    GuessT getDistanceBetweenNodes();
-
     FeedbackT checkGuess(GuessT playerGuess);
 }
