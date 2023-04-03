@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { Edge, Node } from "vis-network";
 import { useStores } from "../helpers/useStores";
 import useVisNetwork from "../useVisNetwork";
@@ -13,7 +14,7 @@ interface IProps {
 
 export default observer(function GraphInner(props: IProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { selectedInput, setProp } = useStores();
+  const { selectedInput, setProp, startNode, endNode, isPlaying } = useStores();
   const { ref, network } = useVisNetwork({
     options: { autoResize: true, height: `${props.height}px` },
     edges: props.edges,
@@ -21,11 +22,22 @@ export default observer(function GraphInner(props: IProps) {
   });
 
   const onNodeClick = (ctx: { nodes: number[] }) => {
-    if (isNaN(ctx.nodes[0])) return;
+    if (isNaN(ctx.nodes[0]) || isPlaying) return;
     const newNodeKey = `${ctx.nodes[0]}`;
 
-    if (selectedInput === "START") setProp("startNode", newNodeKey);
-    else if (selectedInput === "END") setProp("endNode", newNodeKey);
+    if (selectedInput === "START") {
+      if (endNode === newNodeKey) {
+        toast.error("Start and end node cannot be the same!");
+        return;
+      }
+      setProp("startNode", newNodeKey);
+    } else if (selectedInput === "END") {
+      if (startNode === newNodeKey) {
+        toast.error("Start and end node cannot be the same!");
+        return;
+      }
+      setProp("endNode", newNodeKey);
+    }
   };
 
   useEffect(() => {

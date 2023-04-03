@@ -1,4 +1,5 @@
 import { flow, Instance, types } from "mobx-state-tree";
+import toast from "react-hot-toast";
 import GraphService from "./GraphService";
 import { DIFFICULTIES, LOCAL_STORAGE_KEYS } from "./helpers/constants";
 import { withSetPropAction } from "./helpers/withSetPropAction";
@@ -80,7 +81,7 @@ export const RootStoreModel = types
     startPlaying: flow(function* () {
       self.setProp("isCreatingGraph", true);
       if (!self.chosenDifficulty) {
-        alert("Please choose a difficulty.");
+        toast.error("Please choose a difficulty.");
         return;
       }
       const res: {
@@ -99,14 +100,24 @@ export const RootStoreModel = types
       self.setProp("isPlaying", true);
     }),
     submitGuess: flow(function* (guess: number) {
-      const answer: string = yield GraphService.checkGuess(guess);
-      alert(answer);
-      const words = answer.split(" ");
-      const isCorrect = words[0] === "CORRECT";
-      if (isCorrect) {
-        self.saveScore(+words[words.length - 1]);
-        self.stopPlaying();
-      }
+      yield toast.promise(
+        (async () => {
+          const answer: string = await GraphService.checkGuess(guess);
+          const words = answer.split(" ");
+          const isCorrect = words[0] === "CORRECT";
+          if (isCorrect) {
+            self.saveScore(+words[words.length - 1]);
+            self.stopPlaying();
+            return answer;
+          }
+          throw new Error(answer);
+        })(),
+        {
+          loading: "Checking guess...",
+          success: (answer: string) => answer,
+          error: (error) => error?.message ?? "Something went wrong.",
+        }
+      );
     }),
   }))
   .views((self) => ({

@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useRef } from "react";
+import { toast } from "react-hot-toast";
 import { DIFFICULTIES } from "../helpers/constants";
 import { useStores } from "../helpers/useStores";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -23,14 +24,37 @@ export default observer(function GraphSettings() {
   const guessRef = useRef<HTMLInputElement>(null);
 
   const onAbort = () => {
-    if (!confirm("Are you sure you want to abort the game?")) return;
-    stopPlaying();
+    toast(
+      (t) => (
+        <div className="flex items-center gap-3">
+          <span className="whitespace-nowrap">
+            Are you sure you want to abort the game?
+          </span>
+          <button
+            className="rounded border border-gray-400 bg-gray-100 px-2 py-1 hover:bg-gray-200"
+            onClick={() => {
+              toast.dismiss(t.id);
+              stopPlaying();
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="rounded border border-gray-400 bg-gray-100 px-2 py-1 hover:bg-gray-200"
+            onClick={() => toast.dismiss(t.id)}
+          >
+            Cancel
+          </button>
+        </div>
+      ),
+      { duration: Infinity, style: { maxWidth: "fit-content" }, icon: "⚠" }
+    );
   };
 
   const guess = () => {
     const guess = guessRef.current?.value;
     if (!guess) {
-      alert("Please enter a guess");
+      toast.error("Please enter a guess");
       return;
     }
     submitGuess(parseInt(guess));
