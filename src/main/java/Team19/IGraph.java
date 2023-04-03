@@ -1,17 +1,16 @@
 package Team19;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public interface IGraph<NodeInterface,EdgeInterface,NodeKey>  {
+public interface IGraph<NodeInterface,EdgeInterface,NodeKey,PathT,InputT>  {
 
-    ArrayList<NodeInterface> getNodes();
+    List<NodeInterface> getNodes();
 
-    abstract void findShortestPath(NodeKey startNodeKey);
-
-    abstract boolean parseInput(ArrayList<String> inputLines);
-
-    boolean importGraph(String input); 
-
-    ArrayList<EdgeInterface> getEdges();
+    abstract PathT pathFindingAlgorithim(NodeKey startNodeKey,NodeKey endNodeKey);
     
+    void addNode(NodeInterface node);
+
+    boolean importGraph(InputT input); 
+
+    List<EdgeInterface> getEdges();
 }
