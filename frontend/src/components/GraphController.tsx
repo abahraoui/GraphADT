@@ -1,30 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
+import { observer } from "mobx-react-lite";
 import { Edge, Node } from "vis-network";
-import GraphService from "../GraphService";
-import { IGraphEdge } from "../IGraphModel";
+import { useStores } from "../helpers/useStores";
 import GraphInner from "./GraphView";
+import { LoadingSpinner } from "./LoadingSpinner";
 
-interface IProps {
-  startNode: string | undefined;
-  endNode: string | undefined;
-  setStartNode: (node: string | undefined) => void;
-  setEndNode: (node: string | undefined) => void;
-  selectedInput: "START" | "END" | undefined;
-}
+export default observer(function Graph() {
 
-export default function Graph(props: IProps) {
-  const {
-    isLoading,
-    isError,
-    error,
-    data: edges,
-  } = useQuery<IGraphEdge[]>({
-    queryKey: ["getEdges"],
-    queryFn: GraphService.getEdges,
-  });
+  const { startNode, endNode, edges, isLoadingGraph } = useStores();
 
-  if (isLoading) return <>Loading...</>;
-  if (isError) return <>Error {(error as any)?.message ?? ""}!</>;
+  if (!edges || isLoadingGraph)
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  // if (isError) return <>Error {(error as any)?.message ?? ""}!</>;
 
   const edgeList: Edge[] = edges.map((e, i) => ({
     id: i,
@@ -44,8 +34,8 @@ export default function Graph(props: IProps) {
     },
   }));
 
-  const startNodeIndex = nodeList.findIndex((n) => n.id == props.startNode);
-  const endNodeIndex = nodeList.findIndex((n) => n.id == props.endNode);
+  const startNodeIndex = nodeList.findIndex((n) => n.id == startNode);
+  const endNodeIndex = nodeList.findIndex((n) => n.id == endNode);
   if (nodeList.length != 0) {
     if (startNodeIndex !== -1)
       nodeList[startNodeIndex].color = {
@@ -66,13 +56,10 @@ export default function Graph(props: IProps) {
 
   return (
     <GraphInner
-      key={`${props.startNode}-${props.endNode}`}
+      key={`${startNode}-${endNode}-${edges.length}`}
       nodes={nodeList}
       edges={edgeList}
       height={(innerHeight * 3) / 4}
-      setStartNode={props.setStartNode}
-      setEndNode={props.setEndNode}
-      selectedInput={props.selectedInput}
     />
   );
-}
+});
