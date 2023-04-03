@@ -24,7 +24,7 @@ export const RootStoreModel = types
     startNode: types.maybe(types.string),
     endNode: types.maybe(types.string),
     selectedInput: types.maybe(types.enumeration(["START", "END"])),
-    chosenDifficulty: types.maybe(types.enumeration(DIFFICULTIES)),
+    chosenDifficulty: types.optional(types.enumeration(DIFFICULTIES), "Easy"),
     edges: types.maybe(types.array(EdgeModel)),
     isPlaying: false,
     isCreatingGraph: false,
