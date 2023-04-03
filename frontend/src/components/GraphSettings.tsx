@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import { useRef } from "react";
 import { DIFFICULTIES } from "../helpers/constants";
 import { useStores } from "../helpers/useStores";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -14,10 +15,24 @@ export default observer(function GraphSettings() {
     isCreatingGraph,
     isPlaying,
     startPlaying,
+    stopPlaying,
+    submitGuess,
   } = useStores();
 
+  const guessRef = useRef<HTMLInputElement>(null);
+
   const onAbort = () => {
-    confirm("Are you sure you want to abort the game?");
+    if (!confirm("Are you sure you want to abort the game?")) return;
+    stopPlaying();
+  };
+
+  const guess = () => {
+    const guess = guessRef.current?.value;
+    if (!guess) {
+      alert("Please enter a guess");
+      return;
+    }
+    submitGuess(parseInt(guess));
   };
 
   const isNodeSelectionDisabled = chosenDifficulty !== "Custom";
@@ -66,6 +81,27 @@ export default observer(function GraphSettings() {
           />
         </div>
         <div className="flex items-center gap-2">
+          {isPlaying && (
+            <>
+              <span>Guess:</span>
+              <input
+                type="number"
+                ref={guessRef}
+                className="flex h-10 w-14 pl-2 items-center justify-center
+                  rounded border
+                  bg-gray-50
+                  transition-all aria-disabled:text-gray-400 aria-pressed:ring"
+              />
+              <button
+                className="rounded bg-green-500 py-2 px-4 text-lg font-bold text-white shadow transition-all
+          hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+                onClick={guess}
+                disabled={!canStartGame}
+              >
+                Submit
+              </button>
+            </>
+          )}
           {isCreatingGraph ? (
             <LoadingSpinner />
           ) : (
@@ -80,6 +116,7 @@ export default observer(function GraphSettings() {
               </button>
             )
           )}
+
           {isPlaying && (
             <button
               className="rounded bg-red-500 py-2 px-4 text-lg font-bold text-white shadow transition-all

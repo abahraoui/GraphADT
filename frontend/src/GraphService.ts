@@ -11,14 +11,10 @@ export default {
   },
 
   checkGuess: async (guess: number) => {
-    return fetch(`${API_URL}/checkGuess?guess=${guess}`)
-      .then((res) => {
-        if (res.ok) return res.json();
-        throw Error("Unexpected error happened.");
-      })
-      .then((answer) => {
-        return answer.toString();
-      });
+    return fetch(`${API_URL}/checkGuess?guess=${guess}`).then((res) => {
+      if (res.ok) return res.text();
+      throw Error("Unexpected error happened.");
+    });
   },
 
   createGraph: async (

@@ -58,7 +58,14 @@ export const RootStoreModel = types
     }),
     stopPlaying: flow(function* () {
       self.setProp("isPlaying", false);
+      self.setProp("startNode", undefined);
+      self.setProp("endNode", undefined);
+      self.setProp("chosenDifficulty", undefined);
       yield self.loadInitalGraph();
+    }),
+    submitGuess: flow(function* (guess: number) {
+      const answer: string = yield GraphService.checkGuess(guess);
+      alert(answer);
     }),
   }))
   .views((self) => ({

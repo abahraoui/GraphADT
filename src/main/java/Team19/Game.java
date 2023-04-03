@@ -132,13 +132,13 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
         switch (this.difficulty) {
             case HARD:
                 this.difficultyFactor = (difficultyIncrease * 2) + difficultyIncreaseRandomized;
-
+                break;
             case MEDIUM:
                 this.difficultyFactor = (difficultyIncrease * 1) + difficultyIncreaseRandomized;
-
+                break;
             default:
                 this.difficultyFactor = (difficultyIncrease * 0) + difficultyIncreaseRandomized;
-
+                break;
         }
         return pickEndNodeBasedOnDiff();
     }
