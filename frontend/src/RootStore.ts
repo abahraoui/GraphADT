@@ -1,7 +1,11 @@
 import { flow, Instance, types } from "mobx-state-tree";
 import toast from "react-hot-toast";
 import GraphService from "./GraphService";
-import { DIFFICULTIES, LOCAL_STORAGE_KEYS } from "./helpers/constants";
+import {
+  DIFFICULTIES,
+  GameStates,
+  LOCAL_STORAGE_KEYS,
+} from "./helpers/constants";
 import { withSetPropAction } from "./helpers/withSetPropAction";
 import { IGraphEdge } from "./IGraphModel";
 
@@ -16,6 +20,8 @@ const ScoreModel = types.model("Score").props({
   difficulty: types.enumeration(DIFFICULTIES),
   startNode: types.string,
   endNode: types.string,
+  tries: types.number,
+  seconds: types.number,
 });
 
 export const RootStoreModel = types
@@ -26,10 +32,18 @@ export const RootStoreModel = types
     selectedInput: types.maybe(types.enumeration(["START", "END"])),
     chosenDifficulty: types.optional(types.enumeration(DIFFICULTIES), "Easy"),
     edges: types.maybe(types.array(EdgeModel)),
-    isPlaying: false,
     isCreatingGraph: false,
     isLoadingGraph: false,
     scores: types.optional(types.array(ScoreModel), []),
+    correctPath: types.maybe(types.array(types.string)),
+    stateOfGame: types.optional(
+      types.enumeration([
+        GameStates.SETUP,
+        GameStates.PLAYING,
+        GameStates.REVIEWING,
+      ]),
+      GameStates.SETUP
+    ),
   })
   .actions(withSetPropAction)
   .actions((self) => ({
@@ -45,10 +59,12 @@ export const RootStoreModel = types
         difficulty: string;
         startNode: string;
         endNode: string;
+        tries: number;
+        seconds: number;
       }[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.scores) ?? "[]");
       self.setProp("scores", scores);
     },
-    saveScore: (score: number) => {
+    saveScore: (score: number, tries: number, seconds: number) => {
       if (!self.chosenDifficulty || !self.startNode || !self.endNode)
         throw new Error("Cannot save score without difficulty and nodes.");
       const scores = [
@@ -58,6 +74,8 @@ export const RootStoreModel = types
           difficulty: self.chosenDifficulty,
           startNode: self.startNode,
           endNode: self.endNode,
+          tries,
+          seconds,
         },
       ];
       self.setProp("scores", scores);
@@ -65,13 +83,17 @@ export const RootStoreModel = types
     },
   }))
   .actions((self) => ({
-    stopPlaying: flow(function* () {
-      self.setProp("isPlaying", false);
+    reset: flow(function* () {
+      self.setProp("stateOfGame", GameStates.SETUP);
       self.setProp("startNode", undefined);
       self.setProp("endNode", undefined);
       self.setProp("chosenDifficulty", undefined);
+      self.setProp("correctPath", undefined);
       yield self.loadInitalGraph();
     }),
+    reviewAnswer: () => {
+      self.setProp("stateOfGame", GameStates.REVIEWING);
+    },
   }))
   .actions((self) => ({
     afterCreate: flow(function* () {
@@ -97,20 +119,23 @@ export const RootStoreModel = types
       self.setProp("startNode", res.startNodeKey);
       self.setProp("endNode", res.endNodeKey);
       self.setProp("isCreatingGraph", false);
-      self.setProp("isPlaying", true);
+      self.setProp("stateOfGame", GameStates.PLAYING);
     }),
     submitGuess: flow(function* (guess: number) {
       yield toast.promise(
         (async () => {
-          const answer: string = await GraphService.checkGuess(guess);
-          const words = answer.split(" ");
-          const isCorrect = words[0] === "CORRECT";
-          if (isCorrect) {
-            self.saveScore(+words[words.length - 1]);
-            self.stopPlaying();
-            return answer;
+          const answer = await GraphService.checkGuess(guess);
+          if (answer.isCorrect) {
+            self.saveScore(answer.score, answer.tries, answer.seconds);
+            self.setProp("correctPath", answer.path);
+            self.reviewAnswer();
+            return `You guessed correctly in ${answer.tries} ${
+              answer.tries === 1 ? "try" : "tries"
+            }! Your score is ${answer.score}`;
           }
-          throw new Error(answer);
+          throw new Error(
+            `Incorrect guess. Try again! Hint: ${answer.feedback}`
+          );
         })(),
         {
           loading: "Checking guess...",
@@ -119,6 +144,9 @@ export const RootStoreModel = types
         }
       );
     }),
+    startNewGame: () => {
+      self.reset();
+    },
   }))
   .views((self) => ({
     get canStartGame() {
@@ -129,6 +157,17 @@ export const RootStoreModel = types
             !!self.startNode &&
             !!self.endNode))
       );
+    },
+    get correctPathEdges(): { from: string; to: string }[] {
+      const res: { from: string; to: string }[] = [];
+      if (!self.correctPath) return res;
+      for (let i = 0; i < self.correctPath.length - 1; i++) {
+        res.push({
+          from: self.correctPath[i],
+          to: self.correctPath[i + 1],
+        });
+      }
+      return res;
     },
   }));
 

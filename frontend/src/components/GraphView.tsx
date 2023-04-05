@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Edge, Node } from "vis-network";
+import { GameStates } from "../helpers/constants";
 import { useStores } from "../helpers/useStores";
 import useVisNetwork from "../useVisNetwork";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -14,7 +15,7 @@ interface IProps {
 
 export default observer(function GraphInner(props: IProps) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { selectedInput, setProp, startNode, endNode, isPlaying } = useStores();
+  const { selectedInput, setProp, startNode, endNode, stateOfGame } = useStores();
   const { ref, network } = useVisNetwork({
     options: { autoResize: true, height: `${props.height}px` },
     edges: props.edges,
@@ -22,7 +23,7 @@ export default observer(function GraphInner(props: IProps) {
   });
 
   const onNodeClick = (ctx: { nodes: number[] }) => {
-    if (isNaN(ctx.nodes[0]) || isPlaying) return;
+    if (isNaN(ctx.nodes[0]) || stateOfGame !== GameStates.SETUP) return;
     const newNodeKey = `${ctx.nodes[0]}`;
 
     if (selectedInput === "START") {

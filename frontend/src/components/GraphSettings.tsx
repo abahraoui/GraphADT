@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useRef } from "react";
 import { toast } from "react-hot-toast";
-import { DIFFICULTIES } from "../helpers/constants";
+import { DIFFICULTIES, GameStates } from "../helpers/constants";
 import { useStores } from "../helpers/useStores";
 import { LoadingSpinner } from "./LoadingSpinner";
 
@@ -14,11 +14,12 @@ export default observer(function GraphSettings() {
     endNode,
     canStartGame,
     isCreatingGraph,
-    isPlaying,
     startPlaying,
-    stopPlaying,
+    reset: stopPlaying,
     submitGuess,
+    stateOfGame,
     scores,
+    reset,
   } = useStores();
 
   const guessRef = useRef<HTMLInputElement>(null);
@@ -47,7 +48,7 @@ export default observer(function GraphSettings() {
           </button>
         </div>
       ),
-      { duration: Infinity, style: { maxWidth: "fit-content" }, icon: "⚠" }
+      { duration: Infinity, icon: "⚠" }
     );
   };
 
@@ -68,7 +69,7 @@ export default observer(function GraphSettings() {
       <div className="m-4 rounded-lg bg-neutral-100 shadow">
         <div className="flex h-full items-center justify-between gap-4 p-4">
           <h1 className="text-4xl font-semibold uppercase">The Graph Game</h1>
-          {!isPlaying ? (
+          {stateOfGame === GameStates.SETUP ? (
             <>
               <div className="flex items-center  gap-4">
                 {DIFFICULTIES.map((diff, i) => (
@@ -121,7 +122,7 @@ export default observer(function GraphSettings() {
             </div>
           )}
           <div className="flex items-center gap-2">
-            {isPlaying && (
+            {stateOfGame === GameStates.PLAYING && (
               <>
                 <span>Guess:</span>
                 <input
@@ -148,19 +149,21 @@ export default observer(function GraphSettings() {
             {isCreatingGraph ? (
               <LoadingSpinner />
             ) : (
-              !isPlaying && (
+              !(stateOfGame === GameStates.PLAYING) && (
                 <button
                   className="rounded bg-green-500 py-2 px-4 text-lg font-bold text-white shadow transition-all
           hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
-                  onClick={startPlaying}
+                  onClick={
+                    stateOfGame === GameStates.SETUP ? startPlaying : reset
+                  }
                   disabled={!canStartGame}
                 >
-                  Play
+                  {stateOfGame === GameStates.SETUP ? "Play" : "Play again"}
                 </button>
               )
             )}
 
-            {isPlaying && (
+            {stateOfGame === GameStates.PLAYING && (
               <button
                 className="rounded bg-red-500 py-2 px-4 text-lg font-bold text-white shadow transition-all
           hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
@@ -177,17 +180,21 @@ export default observer(function GraphSettings() {
           <h2 className="mb-4 block text-2xl font-semibold uppercase">
             Scoreboard
           </h2>
-          <ol className="flex flex-col gap-2">
-            {scores?.map((score, i) => (
-              <li key={i} className="flex flex-row gap-3">
-                <span>{i + 1}.</span>
-                <span>
-                  {score.difficulty} from {score.startNode} to {score.endNode}
-                </span>
-                <span className="font-bold">{score.score}</span>
-              </li>
-            ))}
-          </ol>
+          <div className="max-h-40 overflow-auto pr-4">
+            <table>
+              {scores?.map((score, i) => (
+                <tr key={i}>
+                  <td className="pr-3">{i + 1}.</td>
+                  <td className="pr-3 font-bold">{score.score}</td>
+                  <td>
+                    {score.difficulty} from {score.startNode} to {score.endNode}{" "}
+                    in {score.tries} {score.tries === 1 ? "try" : "tries"}{" "}
+                    within {score.seconds} seconds
+                  </td>
+                </tr>
+              ))}
+            </table>
+          </div>
         </div>
       )}
     </>

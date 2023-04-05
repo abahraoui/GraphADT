@@ -6,7 +6,10 @@ export default function App() {
   return (
     <>
       <div>
-        <Toaster position="bottom-center" />
+        <Toaster
+          position="bottom-center"
+          toastOptions={{ duration: 10000, style: { maxWidth: "fit-content" } }}
+        />
       </div>
       <div className="h-screen bg-neutral-200">
         <div className="flex h-full flex-col">

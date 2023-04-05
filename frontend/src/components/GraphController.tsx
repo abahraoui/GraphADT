@@ -5,8 +5,14 @@ import GraphInner from "./GraphView";
 import { LoadingSpinner } from "./LoadingSpinner";
 
 export default observer(function Graph() {
-
-  const { startNode, endNode, edges, isLoadingGraph } = useStores();
+  const {
+    startNode,
+    endNode,
+    edges,
+    isLoadingGraph,
+    stateOfGame,
+    correctPathEdges,
+  } = useStores();
 
   if (!edges || isLoadingGraph)
     return (
@@ -16,13 +22,20 @@ export default observer(function Graph() {
     );
   // if (isError) return <>Error {(error as any)?.message ?? ""}!</>;
 
-  const edgeList: Edge[] = edges.map((e, i) => ({
-    id: i,
-    ...e,
-    label: `${e.weight}`,
-    length: e.weight * 20,
-    color: "#3481ea",
-  }));
+  const edgeList: Edge[] = edges.map((e, i) => {
+    const shouldHighlight = correctPathEdges.some(
+      (c) =>
+        (c.from == e.from && c.to == e.to) || (c.from == e.to && c.to == e.from)
+    );
+    return {
+      id: i,
+      ...e,
+      label: `${e.weight}`,
+      length: e.weight * 20,
+      width: shouldHighlight ? 5 : 1,
+      color: shouldHighlight ? "red" : "#3481ea",
+    };
+  });
 
   const nodeList: Node[] = [
     ...new Set([...edges.map((e) => e.from), ...edges.map((e) => e.to)]),
@@ -56,7 +69,7 @@ export default observer(function Graph() {
 
   return (
     <GraphInner
-      key={`${startNode}-${endNode}-${edges.length}`}
+      key={`${startNode}-${endNode}-${edges.length}-${stateOfGame}`}
       nodes={nodeList}
       edges={edgeList}
       height={(innerHeight * 3) / 4}

@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.Gson;
+import com.google.gson.JsonPrimitive;
 
 public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 
@@ -104,11 +105,21 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 
     public String checkGuess(Double playerGuess) {
         this.amountOfGuesses += 1;
-        if (playerGuess > correctLength)
-            return "LOWER";
-        if (playerGuess < correctLength)
-            return "HIGHER";
-        return "CORRECT your score was "+this.calculateScore();
+        boolean isCorrect = playerGuess.equals(correctLength);
+
+        JsonObject response = new JsonObject();
+        response.add("feedback", new JsonPrimitive(isCorrect ? "CORRECT" : (playerGuess > correctLength ? "LOWER" : "HIGHER")));
+        response.add("isCorrect", new JsonPrimitive(isCorrect));
+        if (isCorrect) {
+            JsonArray pathJsonArray = new JsonArray();
+            this.correctPath.forEach(node -> pathJsonArray.add(node));
+            response.add("path", pathJsonArray);
+            response.add("score", new JsonPrimitive(isCorrect ? this.calculateScore() : -1));
+            response.add("tries", new JsonPrimitive(this.amountOfGuesses));
+
+            response.add("seconds", new JsonPrimitive((int) Math.floor((System.currentTimeMillis() - this.userPlayTime) / 1000.0)));
+        }
+        return new Gson().toJson(response);
     }
 
     /**
