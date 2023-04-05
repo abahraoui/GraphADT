@@ -1,7 +1,6 @@
 package Team19;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.*;
 
 abstract class GraphADT<NodeKey,NodeWeight,EdgeInterface,NodeInterface> implements IGraph<NodeInterface,EdgeInterface,NodeKey,NodeWeight,String> {
@@ -39,15 +38,15 @@ abstract class GraphADT<NodeKey,NodeWeight,EdgeInterface,NodeInterface> implemen
 
     public boolean importGraph(String input) {
         try {
-            File myObj = new File(input);
-            Scanner myReader = new Scanner(myObj);
+            InputStream in = getClass().getResourceAsStream(input);
+            Scanner myReader = new Scanner(in);
             ArrayList<String> data = new ArrayList<>();
             while (myReader.hasNextLine()) {
                 data.add(myReader.nextLine());
             }
             myReader.close();
             return this.parseInput(data);
-        } catch (FileNotFoundException e) {
+        } catch (NullPointerException e) {
             throw new NullPointerException("File not found.");
         }
     }

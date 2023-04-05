@@ -14,7 +14,7 @@ public class MyController {
 
     public MyController(){
         game = new Game();
-        game.graph.importGraph("src/main/resources/sampleInput.txt");
+        game.graph.importGraph("/sampleInput.txt");
     }
 
     @GET("/")

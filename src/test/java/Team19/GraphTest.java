@@ -23,7 +23,7 @@ public class GraphTest {
     @Before
     public void setUp() {
         game = new Game();
-        game.graph.importGraph("src/main/resources/sampleInput.txt");
+        game.graph.importGraph("/sampleInput.txt");
     }
 
     /**
@@ -31,7 +31,7 @@ public class GraphTest {
      */
     @Test
     public void testImport() {
-        assertTrue(game.graph.importGraph("src/main/resources/sampleInput.txt"));
+        assertTrue(game.graph.importGraph("/sampleInput.txt"));
     }
 
     /**
