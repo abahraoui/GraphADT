@@ -19,7 +19,13 @@ public class MyController {
 
     @GET("/")
     public String landingPage() {
-        return "Hello Jooby!";
+        return "Welcome to the Graph Game API!\n\n" + "The endpoints are:\n" +
+                "  GET /\n" +
+                "  GET /createGraph  with parameters start_node and end_node or difficulty.\n" +
+                "  GET /getEdges\n" +
+                "  GET /checkGuess with a single parameter guess.\n\n"
+                + "To add parameters to endpoints add to localhost: '/endpoint_name?param_name=value'\n" +
+                "If there is more than one parameter do: '/endpoint_name?param_name1=value1&param_name2=value2'";
     }
 
     @GET("/createGraph")

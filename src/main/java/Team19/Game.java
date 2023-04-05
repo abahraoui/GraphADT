@@ -7,13 +7,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.Gson;
 
 public class Game extends GameADT<String,Graph,String,String,Double,Long> {
-	
+
 	public Game() {
         this.graph = new Graph();
     }
-	
+
 	final Integer MINPATHLENGTH = 2; // Minimum length of a path
-	
 
 
     public String createGraph(String start_node,  String end_node,  String difficulty) {
@@ -56,7 +55,6 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 
     public String generateEndNodeBasedOnDifficulty() {
         return this.pathLengthByDiff();
-
     }
 
     public void setDifficulty(String diff){
@@ -73,7 +71,6 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
         }
     }
 
-    //TODO comment this please
     /**
      * userPlayTime we initialise this parameter with the time the user starts playing the game,
      * then we substract the time the user has found the correct path length.
@@ -81,11 +78,18 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
      * the difficulty.
      */
     public Long calculateScore() {
+        System.out.println(userPlayTime);
+        System.out.println(System.currentTimeMillis());
         Long timetaken = System.currentTimeMillis() - userPlayTime;
+        System.out.println(userPlayTime);
+        System.out.println(this.amountOfGuesses);
+        System.out.println((10 / this.amountOfGuesses));
+        System.out.println(((10 / this.amountOfGuesses) / userPlayTime));
+        System.out.println(750 * ((10 / this.amountOfGuesses) / userPlayTime));
         switch (this.difficulty) {
             case HARD:
-                // return (3000 * ((10 / 1) / 845186200));    
-                return ((3000 * (10 / this.amountOfGuesses)) / (timetaken/1000));    
+                // return (3000 * ((10 / 1) / 845186200));
+                return ((3000 * (10 / this.amountOfGuesses)) / (timetaken/1000));
             case MEDIUM:
                 return ((1500 * (10 / this.amountOfGuesses)) / (timetaken/1000));
             default: //custom difficulty is rewarded the same as easy
@@ -107,10 +111,8 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
         if (playerGuess < correctLength)
             return "HIGHER";
         // Integer score = this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
-        return "CORRECT your score was " + this.calculateScore();
+        return "CORRECT your score was "+this.calculateScore();
     }
-
-    //TODO comment this please
 
     /**
      *
@@ -129,19 +131,19 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
         Integer difficultyIncrease = (max - MINPATHLENGTH) % 3;
 
         Integer difficultyIncreaseRandomized = (int) (Math.random() * difficultyIncrease);
-        
+
         difficultyIncreaseRandomized += MINPATHLENGTH;
 
         switch (this.difficulty) {
             case HARD:
                 this.difficultyFactor = (difficultyIncrease * 2) + difficultyIncreaseRandomized;
-                break;
+
             case MEDIUM:
                 this.difficultyFactor = (difficultyIncrease * 1) + difficultyIncreaseRandomized;
-                break;
+
             default:
                 this.difficultyFactor = (difficultyIncrease * 0) + difficultyIncreaseRandomized;
-                break;
+
         }
         return pickEndNodeBasedOnDiff();
     }
@@ -153,7 +155,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
      * difficultyFactor is a randomized number given by the pathLengthByDiff() function.
      *
      * @return we return the number of the pick node, which has a path length equal to difficultyFactor.
-     *  
+     *
      */
     public String pickEndNodeBasedOnDiff() {
         String randomlyPickedEndNote = null;
