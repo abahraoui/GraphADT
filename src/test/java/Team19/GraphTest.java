@@ -165,12 +165,12 @@ public class GraphTest {
         String response = game.createGraph("0", "10");
         assertEquals("0", game.getStartNodeKey());
         assertEquals("10", game.getEndNodeKey());
-        assertNotNull(response);
+        assertTrue(response.length() > 0);
         response = game.createGraph("1", "12", "easy");
         assertEquals("1", game.getStartNodeKey());
         assertEquals("12", game.getEndNodeKey());
         assertEquals(GameADT.Level.EASY, game.difficulty);
-        assertNotNull(response);
+        assertTrue(response.length() > 0);
     }
 
     /**
