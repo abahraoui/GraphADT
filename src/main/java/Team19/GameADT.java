@@ -4,14 +4,14 @@ import java.util.List;
 
 public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT,ScoreT> implements IGameBase<NodeKey,FeedbackT,GuessT>,IGameDifficulty<NodeKey,DifficultyInputT,ScoreT> {
 
-    
+
 
     enum Level {
         HARD,
         MEDIUM,
         EASY
     }
-	
+
 	protected Integer MINPATHLENGTH; // Minimum length of a path
 
     protected Level difficulty;
@@ -29,9 +29,8 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT,S
     public long userPlayTime = 0;
 
 
-    public abstract String createGraph(NodeKey start_node,  NodeKey end_node,  DifficultyInputT difficulty); 
+    public abstract String createGraph(NodeKey start_node,  NodeKey end_node,  DifficultyInputT difficulty);
 
-    //TODO reconisder if we need to update correct length after resetting the start (really; it is good practice but technically futile with our functionality offered to the user
     public void setStartNodeKey(NodeKey startingNode) {
         this.startNodeKey = startingNode;
         updateCorrectLength();

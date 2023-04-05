@@ -22,8 +22,7 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
         this.findShortestPath(startNodeKey);
         return distances.get(endNodeKey);
     }
-    
-    //TODO comment this please - maybe refactor and sub method it its too big
+
     /**
      *
      * @param startNodeKey given the starting node, this function finds the shortest paths to all other nodes using the
@@ -95,7 +94,7 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
         this.pathsOfAll = pathOfAll;
     }
 
-    //TODO comment this please
+
     /**
      *
      * @param distances this is a map to all the nodes from our starting node
@@ -110,9 +109,8 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
         return min == null ? null : min.getKey();
     }
 
-   
 
-    // 0 36 {'weight': 9}
+
     public boolean parseInput(ArrayList<String> lines) {
         final String parseRegex = "(\\d*) (\\d*) \\{'weight': (\\d*)}";
         Pattern pattern = Pattern.compile(parseRegex);
@@ -159,7 +157,6 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
     }
 
     public void updateEdges() {
-        // ArrayList<EdgeDTO> edges = new ArrayList<>();
         this.nodes.forEach(node -> {
             Map<String, Double> currentEdges = node.getEdges();
             currentEdges.forEach((currentTo, currentWeight) -> {
@@ -170,7 +167,6 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
     }
 
     public ArrayList<EdgeDTO> getEdges() {
-        // ArrayList<EdgeDTO> edges = new ArrayList<>();
         updateEdges();
         return edges;
     }

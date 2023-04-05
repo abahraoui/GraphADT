@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 abstract class GraphADT<NodeKey,NodeWeight,EdgeInterface,NodeInterface> implements IGraph<NodeInterface,EdgeInterface,NodeKey,NodeWeight,String> {
-    
+
     protected ArrayList<NodeInterface> nodes;
     protected ArrayList<EdgeInterface> edges;
 
@@ -17,7 +17,7 @@ abstract class GraphADT<NodeKey,NodeWeight,EdgeInterface,NodeInterface> implemen
         this(new ArrayList<>());
 
     }
-    
+
     public GraphADT(ArrayList<NodeInterface> node) {
         this.nodes = node;
         this.edges = new ArrayList<>();
@@ -30,7 +30,7 @@ abstract class GraphADT<NodeKey,NodeWeight,EdgeInterface,NodeInterface> implemen
     public void addNode(NodeInterface node){
         this.getNodes().add(node);
     }
-    
+
     public abstract NodeWeight pathFindingAlgorithim(NodeKey startNodeKey,NodeKey endNodeKey);
 
     public abstract void findShortestPath(NodeKey startNodeKey);
@@ -48,7 +48,6 @@ abstract class GraphADT<NodeKey,NodeWeight,EdgeInterface,NodeInterface> implemen
                 data.add(myReader.nextLine());
             }
             myReader.close();
-            //System.out.println(data.toString());
             return this.parseInput(data);
         } catch (FileNotFoundException e) {
             throw new NullPointerException("File not found.");

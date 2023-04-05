@@ -2,6 +2,7 @@ package Team19;
 
 import org.junit.Before;
 import org.junit.Test;
+import java.util.Optional;
 import static org.junit.Assert.*;
 
 public class GraphTest {
@@ -37,25 +38,8 @@ public class GraphTest {
     }
 
     /**
-     * This helper will run setEndNodeKey until the correct length has changed,
-     * as the random factor might give us the same correct length even though we changed the end node.
-     * @param oldCorrectLength is the correct length that should not be equal to the game's correct length.
-     */
-    private void loopUntilCorrectLengthChanges(double oldCorrectLength){
-        while(oldCorrectLength == game.correctLength){
-            System.out.println(oldCorrectLength);
-            System.out.println(game.correctLength);
-            game.setEndNodeKey(game.generateEndNodeBasedOnDifficulty());
-        }
-
-    }
-    /**
      * This will test random nodes setters based on difficulty and will also test the setDifficulty function of the game.
-     * This is done by checking if the correct length has changed after changing difficulty.
-     * The random factor might make the test fail,
-     * so we use a helper function to change the end node key until the correct length changed.
-     * If the correct length doesn't change,
-     * it will not be a problem for the actual game but for the sake of testing we check that the correct length changes.
+     * This is done by checking if the difficulty factor is still equal to the correct path length.
      */
     @Test
     public void testRandomNodeAndDifficultySetters() {
@@ -64,16 +48,16 @@ public class GraphTest {
         game.setDifficulty("easy");
         assertEquals(GameADT.Level.EASY, game.difficulty);
         game.setEndNodeKey(game.generateEndNodeBasedOnDifficulty());
-        double oldCorrectLength = game.correctLength;
+        assertEquals(Optional.of(game.correctPath.size()),Optional.of(game.difficultyFactor));
         game.setDifficulty("medium");
         assertEquals(GameADT.Level.MEDIUM, game.difficulty);
-        loopUntilCorrectLengthChanges(oldCorrectLength);
-        assertNotEquals(oldCorrectLength, game.correctLength);
-        oldCorrectLength = game.correctLength;
+        game.setEndNodeKey(game.generateEndNodeBasedOnDifficulty());
+        assertEquals(Optional.of(game.correctPath.size()),Optional.of(game.difficultyFactor));
         game.setDifficulty("hard");
         assertEquals(GameADT.Level.HARD, game.difficulty);
-        loopUntilCorrectLengthChanges(oldCorrectLength);
-        assertNotEquals(oldCorrectLength, game.correctLength);
+        game.setEndNodeKey(game.generateEndNodeBasedOnDifficulty());
+        assertEquals(Optional.of(game.correctPath.size()),Optional.of(game.difficultyFactor));
+
 
     }
 

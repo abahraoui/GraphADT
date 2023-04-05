@@ -88,7 +88,6 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
         System.out.println(750 * ((10 / this.amountOfGuesses) / userPlayTime));
         switch (this.difficulty) {
             case HARD:
-                // return (3000 * ((10 / 1) / 845186200));
                 return ((3000 * (10 / this.amountOfGuesses)) / (timetaken/1000));
             case MEDIUM:
                 return ((1500 * (10 / this.amountOfGuesses)) / (timetaken/1000));
@@ -99,8 +98,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 
     public void updateCorrectLength() {
         if (this.getStartNodeKey() != null && this.getEndNodeKey() != null) {
-            graph.findShortestPath(this.getStartNodeKey());
-            this.correctLength = graph.distances.get(this.getEndNodeKey());
+            this.correctLength = graph.pathFindingAlgorithim(this.getStartNodeKey(),this.getEndNodeKey());
         }
     }
 
@@ -110,7 +108,6 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
             return "LOWER";
         if (playerGuess < correctLength)
             return "HIGHER";
-        // Integer score = this.calculateScore(Math.toIntExact(System.nanoTime() * (10 ^ 9)),this.amountOfGuesses);
         return "CORRECT your score was "+this.calculateScore();
     }
 
@@ -137,13 +134,13 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
         switch (this.difficulty) {
             case HARD:
                 this.difficultyFactor = (difficultyIncrease * 2) + difficultyIncreaseRandomized;
-
+                break;
             case MEDIUM:
                 this.difficultyFactor = (difficultyIncrease * 1) + difficultyIncreaseRandomized;
-
+                break;
             default:
                 this.difficultyFactor = (difficultyIncrease * 0) + difficultyIncreaseRandomized;
-
+                break;
         }
         return pickEndNodeBasedOnDiff();
     }
