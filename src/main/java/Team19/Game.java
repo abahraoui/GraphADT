@@ -148,7 +148,6 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
         return pickEndNodeBasedOnDiff();
     }
 
-    //TODO comment this please
 
     /**
      *
