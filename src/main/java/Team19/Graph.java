@@ -52,7 +52,7 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
                 Double outerNodeDistance = this.distances.get(outerNode.getKey());
                 Double innerNodeDistance = this.distances.get(innerNode.getKey());
                 if (!sptSet.get(innerNode.getKey()) &&
-                        (edgeWeight != null && edgeWeight != 0) &&
+                        edgeWeight != null &&
                         outerNodeDistance != Double.POSITIVE_INFINITY &&
                         (outerNodeDistance + edgeWeight < innerNodeDistance)) {
                     this.distances.put(innerNode.getKey(), outerNodeDistance + edgeWeight);
