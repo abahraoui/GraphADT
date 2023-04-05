@@ -23,7 +23,7 @@ public abstract class GameADT<NodeKey,GraphT,FeedbackT,DifficultyInputT,GuessT,S
     protected NodeKey endNodeKey;
 
     public GuessT correctLength;
-    protected  List<String> correctPath;
+    protected  List<NodeKey> correctPath;
 
     public Integer amountOfGuesses = 0;
     public long userPlayTime = 0;

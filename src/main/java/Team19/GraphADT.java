@@ -33,8 +33,6 @@ abstract class GraphADT<NodeKey,NodeWeight,EdgeInterface,NodeInterface> implemen
 
     public abstract NodeWeight pathFindingAlgorithim(NodeKey startNodeKey,NodeKey endNodeKey);
 
-    public abstract void findShortestPath(NodeKey startNodeKey);
-
     public abstract boolean parseInput(ArrayList<String> inputLines);
 
     public abstract void updateEdges();
