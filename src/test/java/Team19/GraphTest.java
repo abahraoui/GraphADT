@@ -55,7 +55,8 @@ public class GraphTest {
 
     /**
      * This will test random nodes setters based on difficulty and will also test the setDifficulty function of the game.
-     * This is done by checking if the difficulty factor is still equal to the correct path length.
+     * This is done by checking if the difficulty factor is still equal to the correct path length and if the start and
+     * end nodes are in the current set of nodes based on current difficulty.
      */
     @Test
     public void testRandomNodeAndDifficultySetters() {
