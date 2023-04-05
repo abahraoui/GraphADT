@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -37,10 +39,18 @@ public class GraphTest {
      */
     @Test
     public void testNodeKeys() {
-        game.setStartNodeKey("0");
-        assertEquals(game.getStartNodeKey(), "0");
-        game.setEndNodeKey("10");
-        assertEquals(game.getEndNodeKey(), "10");
+        game.setStartNodeKey("1");
+        assertEquals(game.getStartNodeKey(), "1");
+        game.setEndNodeKey("8");
+        assertEquals(game.getEndNodeKey(), "8");
+        assertEquals(Optional.ofNullable(game.correctLength), Optional.of(7.0));
+        List<String> testPath = new ArrayList<>();
+        testPath.add("8");
+        testPath.add("1");
+        for(int i = 0; i < testPath.size(); i++){
+            assertEquals(game.correctPath.get(i), testPath.get(i) );
+        }
+
     }
 
     /**
@@ -49,22 +59,27 @@ public class GraphTest {
      */
     @Test
     public void testRandomNodeAndDifficultySetters() {
-        game.setStartNodeKey(game.generateStartNodeBasedOnDifficulty());
-        assertNotNull(game.getStartNodeKey());
         game.setDifficulty("easy");
-        assertEquals(GameADT.Level.EASY, game.difficulty);
+        game.setStartNodeKey(game.generateStartNodeBasedOnDifficulty());
         game.setEndNodeKey(game.generateEndNodeBasedOnDifficulty());
+        assertTrue(game.graph.pathsOfAll.containsKey(game.getStartNodeKey()));
+        assertTrue(game.graph.pathsOfAll.containsKey(game.getEndNodeKey()));
+        assertEquals(GameADT.Level.EASY, game.difficulty);
         assertEquals(Optional.of(game.correctPath.size()), Optional.of(game.difficultyFactor));
         game.setDifficulty("medium");
-        assertEquals(GameADT.Level.MEDIUM, game.difficulty);
+        game.setStartNodeKey(game.generateStartNodeBasedOnDifficulty());
         game.setEndNodeKey(game.generateEndNodeBasedOnDifficulty());
+        assertTrue(game.graph.pathsOfAll.containsKey(game.getStartNodeKey()));
+        assertTrue(game.graph.pathsOfAll.containsKey(game.getEndNodeKey()));
+        assertEquals(GameADT.Level.MEDIUM, game.difficulty);
         assertEquals(Optional.of(game.correctPath.size()), Optional.of(game.difficultyFactor));
         game.setDifficulty("hard");
-        assertEquals(GameADT.Level.HARD, game.difficulty);
+        game.setStartNodeKey(game.generateStartNodeBasedOnDifficulty());
         game.setEndNodeKey(game.generateEndNodeBasedOnDifficulty());
+        assertTrue(game.graph.pathsOfAll.containsKey(game.getStartNodeKey()));
+        assertTrue(game.graph.pathsOfAll.containsKey(game.getEndNodeKey()));
+        assertEquals(GameADT.Level.HARD, game.difficulty);
         assertEquals(Optional.of(game.correctPath.size()), Optional.of(game.difficultyFactor));
-
-
     }
 
     /**
