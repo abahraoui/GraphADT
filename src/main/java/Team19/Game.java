@@ -50,7 +50,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
 
 
     public String generateStartNodeBasedOnDifficulty() {
-        return Integer.toString((int) Math.floor(Math.random() * (graph.getNodes().size() + 1) + 0));
+        return graph.nodes.get((int) Math.floor(Math.random() * (graph.getNodes().size() + 1) + 0)).getKey();
     }
 
     public String generateEndNodeBasedOnDifficulty() {
