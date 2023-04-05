@@ -2,6 +2,8 @@
 
 This is Team 19's solution to the Graph Coursework. Welcome! 👋
 
+Here is a [link to our GitLab repository](https://gitlab.cis.strath.ac.uk/ykb20128/graphadt_team19) where you will be able too see all our commits.
+
 ## Running the project
 
 Since our application is a web application, you need to run both the server and the client at the same time.
@@ -35,7 +37,3 @@ npm start
 ```
 
 The project was developed and tested on Node version 16.18.0 and npm version 6.9.0.
-
-### Here is a link to our Gitlab where you will be able too see all our commits:
-
-https://gitlab.cis.strath.ac.uk/ykb20128/graphadt_team19 
