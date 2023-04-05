@@ -79,14 +79,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
      * the difficulty.
      */
     public Long calculateScore() {
-        System.out.println(userPlayTime);
-        System.out.println(System.currentTimeMillis());
         Long timetaken = System.currentTimeMillis() - userPlayTime;
-        System.out.println(userPlayTime);
-        System.out.println(this.amountOfGuesses);
-        System.out.println((10 / this.amountOfGuesses));
-        System.out.println(((10 / this.amountOfGuesses) / userPlayTime));
-        System.out.println(750 * ((10 / this.amountOfGuesses) / userPlayTime));
         switch (this.difficulty) {
             case HARD:
                 return ((3000 * (10 / this.amountOfGuesses)) / (timetaken/1000));
@@ -100,6 +93,7 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
     public void updateCorrectLength() {
         if (this.getStartNodeKey() != null && this.getEndNodeKey() != null) {
             this.correctLength = graph.pathFindingAlgorithim(this.getStartNodeKey(),this.getEndNodeKey());
+            this.correctPath = graph.pathsOfAll.get(this.getEndNodeKey());
         }
     }
 
@@ -134,7 +128,6 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
             if (list.size() > max)
                 max = list.size();
         }
-        System.out.println("Path with max hops: " + max);
 
         Integer difficultyIncrease = (max - MINPATHLENGTH) % 3;
 
@@ -177,7 +170,6 @@ public class Game extends GameADT<String,Graph,String,String,Double,Long> {
                 }
             }
         }
-        this.correctPath = graph.pathsOfAll.get(randomlyPickedEndNote);
         return randomlyPickedEndNote;
     }
 }

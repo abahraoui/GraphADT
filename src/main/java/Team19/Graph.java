@@ -84,12 +84,6 @@ public class Graph extends GraphADT<String,Double,EdgeDTO,Node> {
             pathToThisNode.add(tempEnd);
             pathOfAll.put(node.getKey(), pathToThisNode);
         });
-        System.out.println();
-        System.out.println();
-        System.out.print("pathOfAll ");
-        System.out.println(pathOfAll);
-        System.out.println();
-        System.out.println();
 
         this.pathsOfAll = pathOfAll;
     }
