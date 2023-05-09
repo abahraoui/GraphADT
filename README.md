@@ -1,5 +1,7 @@
 # CS308 Coursework Team 19
 
+![image](https://user-images.githubusercontent.com/106979580/237048675-10791f73-60f8-4d10-9253-65c6a08acbb2.png)
+
 This is Team 19's solution to the Graph Coursework. Welcome! 👋
 
 Here is a [link to our GitLab repository](https://gitlab.cis.strath.ac.uk/ykb20128/graphadt_team19) where you will be able to see all our commits.
