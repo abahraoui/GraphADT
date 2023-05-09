@@ -2,7 +2,13 @@
 
 ![image](https://user-images.githubusercontent.com/106979580/237048675-10791f73-60f8-4d10-9253-65c6a08acbb2.png)
 
-This is Team 19's solution to the Graph Coursework. Welcome! 👋
+## Welcome! 👋
+
+This is Team 19's solution to the Graph Coursework.
+
+The GraphADT project or Graph game is a simple one player game that prompts the player to find the correct distance between two nodes in a Graph. It has many useful features like difficulty, hints or even scoreboard, to make the game more enjoyable for any kind of player. The frontend is ReactJS-based and the backend uses Java.
+
+This project has been done as part of our studies at the University of Strathclyde. To teach us the significance of abstraction and decoupling in software engineering.
 
 Here is a [link to our Github repository](https://github.com/abahraoui/GraphADT) where you will be able to see all our commits.
 
