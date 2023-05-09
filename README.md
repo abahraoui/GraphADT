@@ -1,8 +1,6 @@
-# CS308 Coursework Team 19
+## Welcome! 👋
 
 ![image](https://user-images.githubusercontent.com/106979580/237048675-10791f73-60f8-4d10-9253-65c6a08acbb2.png)
-
-## Welcome! 👋
 
 This is Team 19's solution to the Graph Coursework.
 
