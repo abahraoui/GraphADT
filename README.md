@@ -4,7 +4,7 @@
 
 This is Team 19's solution to the Graph Coursework. Welcome! 👋
 
-Here is a [link to our GitLab repository](https://gitlab.cis.strath.ac.uk/ykb20128/graphadt_team19) where you will be able to see all our commits.
+Here is a [link to our GitLab repository](https://github.com/abahraoui/GraphADT) where you will be able to see all our commits.
 
 ## Running the project
 
